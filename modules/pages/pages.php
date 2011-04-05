@@ -11,8 +11,7 @@ class pages {
     public static function main() {
         // get page via id or url
         if(url::param('id')) {
-            //$id = filter::int(url::param('id'));
-            $id = url::param('id');
+            $id = filter::int(url::param('id'));
             $page = db::fetch_array(db::query('SELECT name, url, content FROM he'.NR.'_pages
                                                WHERE
                                                     id = '.$id));

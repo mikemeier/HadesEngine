@@ -4,6 +4,9 @@
  * @author  Martin Lantzsch <martin@linux-doku.de>
  */
 
+// start session
+session_start();
+
 // load classAutoLoader
 require_once 'classAutoLoader.php';
 

@@ -9,7 +9,6 @@ class pages {
      * main action
      */
     public static function main() {
-        echo test::tralala();
         // get page via id or url
         if(url::param('id')) {
             $id = filter::int(url::param('id'));

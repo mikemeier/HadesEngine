@@ -6,8 +6,9 @@
  */
 
 function load($name) {
+    global $page;
     $path = 'includes/classes/'.$name.'.class.php';
-    $moduleClassPath = 'modules/'.utils::current('module').'/classes/'.$name.'.class.php';
+    $moduleClassPath = 'modules/'.$page.'/classes/'.$name.'.class.php';
     if(file_exists($path))
         require_once $path;
     elseif(file_exists($moduleClassPath))

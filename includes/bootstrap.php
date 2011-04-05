@@ -9,7 +9,6 @@ session_start();
 
 // load classAutoLoader
 require_once 'classAutoLoader.php';
-require_once 'classes/utils.class.php';
 
 // load settings
 utils::loadSettings();

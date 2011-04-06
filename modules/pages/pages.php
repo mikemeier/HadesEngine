@@ -9,7 +9,6 @@ class pages {
      * main action
      */
     public static function main() {
-        echo test::tralala();
         // get page via id or url
         if(url::param('id')) {
             $id = filter::int(url::param('id'));
@@ -25,8 +24,18 @@ class pages {
             }
             $page = db::fetch_array(db::query('SELECT name, url, content FROM he'.NR.'_pages
                                                WHERE
-                                                    url = '.$url));
+                                                    url = "'.$url.'"'));
         }
+
+        // make 404 page if no data is served
+        if(!$page) {
+            $page['name'] = '404';
+            $page['content'] = 'Sorry it\'s not here!';
+        }
+
+        // set page name in front of site name
+        tpl::title($page['name'].' - ');
+
         // build page
         $tpl = new tpl('page');
         $tpl->set($page);

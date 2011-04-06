@@ -24,3 +24,6 @@ define('NR', utils::setting('core', 'install_number'));
 
 // progress params
 $url = new url($_GET['p']);
+
+// set page title
+tpl::title(utils::setting('core', 'site_name'));

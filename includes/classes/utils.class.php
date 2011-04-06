@@ -19,14 +19,27 @@ class utils {
         return self::$settings[$section][$name];
     }
 
+    /**
+     *
+     * @global <type> $page
+     * @param <type> $name
+     * @return <type>
+     */
     public static function current($name) {
         if($name == 'module') {
-            return url::param('page');
+            if(url::param('page')) {
+                return url::param('page');
+            } else {
+                global $page;
+                return $page;
+            }
         } elseif($name == 'action') {
             if(url::param('action'))
                 return url::param('action');
             else
                 return 'main';
+        } elseif($name == 'theme') {
+            return self::setting('core', 'theme');
         }
     }
 }

@@ -1,0 +1,2 @@
+;<?php die() ?>
+homeWelcome = "welcome"

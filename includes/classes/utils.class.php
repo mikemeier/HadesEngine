@@ -1,4 +1,9 @@
 <?php
+/**
+ * some good and useful things ;-)
+ *
+ * @author  Martin Lantzsch <martin@linux-doku.de>
+ */
 class utils {
     private static $settings = array();
 
@@ -20,10 +25,13 @@ class utils {
     }
 
     /**
-     *
-     * @global <type> $page
-     * @param <type> $name
-     * @return <type>
+     * Get current
+     * - module
+     * - action
+     * - theme
+     * @global  string  $page
+     * @param   string  $name
+     * @return  string
      */
     public static function current($name) {
         if($name == 'module') {
@@ -40,6 +48,33 @@ class utils {
                 return 'main';
         } elseif($name == 'theme') {
             return self::setting('core', 'theme');
+        }
+    }
+
+    /**
+     * Write given array to ini file
+     *
+     * @param   string   $file
+     * @return  array    $content
+     */
+    public static function writeArrayToIni($file, $content)
+    {
+        if(is_writeable($file) == true || !file_exists($file))
+        {
+            $c = ";<?php die() ?>\n";
+            foreach($content as $item1 => $item2)
+            {
+                if(is_array($item2)) {
+                    $c = $c.'['.$item1."]\n";
+                    foreach($item2 as $item3 => $item4)
+                    {
+                        $c = $c.$item3.' = '.$item4."\n";
+                    }
+                } else {
+                    $c = $c.$item1.' = '.$item2."\n";
+                }
+            }
+            return file_put_contents($file, $c);
         }
     }
 }

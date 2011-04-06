@@ -8,3 +8,5 @@ install_number = 1;
 frontpage = "home"
 theme = "default"
 site_name = "HadesEngine"
+lang = "de"
+lang_cache = false

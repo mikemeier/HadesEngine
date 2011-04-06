@@ -25,5 +25,8 @@ define('NR', utils::setting('core', 'install_number'));
 // progress params
 $url = new url($_GET['p']);
 
+// load langauge
+lang::init(utils::setting('core', 'lang'));
+
 // set page title
 tpl::title(utils::setting('core', 'site_name'));

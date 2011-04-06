@@ -5,7 +5,7 @@
                 Powered by <a href="http://github.com/HadesEngine">HadesEngine</a>
             </span>
             <span class="right">
-                <a href="?p=pages/page/url/imprint">Imprint</a>
+                <a href="?p=page/pages/url/imprint">Imprint</a>
             </span>
         </div>
     </body>

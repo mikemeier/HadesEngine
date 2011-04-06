@@ -1,10 +1,9 @@
 <?php
 /**
  * Filter vars and check their type
- * 
+ *
  * @author  Martin Lantzsch <martin@linux-doku.de>
  */
-
 class filter {
 
     /**
@@ -62,14 +61,14 @@ class filter {
     }
 
     /**
-     * check if var is a regex
+     * check if var matches a regex pattern
      * @param   mixed   $var
+     * @param   string  $pattern
      * @return  bool
      */
-    public static function isRegexp($var) {
-        return filter_var($var, FILTER_VALIDATE_REGEXP);
+    public static function matchesRegex($var, $pattern) {
+        return filter_var($var, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => $pattern)));
     }
-
 
     /**
      * Make a string and filter all "bad" things
@@ -88,7 +87,6 @@ class filter {
     public static function stripped($var) {
         return filter_var($var, FILTER_SANITIZE_STRIPPED);
     }
-
 
     /**
      * Make a email and filter all "bad" things

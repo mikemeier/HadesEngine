@@ -27,10 +27,7 @@ class lang {
             unset($moduleDir[1]);
             // go through all dirs
             foreach($moduleDir as $name) {
-                $langFile = 'modules/'.$name.'/lang/'.self::$lang.'.lang.php';
-                // if file exists add it
-                if(file_exists($langFile))
-                    self::addFile($langFile);
+                self::add($name);
             }
             // write to cache if enabled
             if(utils::setting('core', 'lang_cache'))

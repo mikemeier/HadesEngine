@@ -30,3 +30,19 @@ lang::init(utils::setting('core', 'lang'));
 
 // set page title
 tpl::title(utils::setting('core', 'site_name'));
+
+// get page from params
+$page = filter::string(url::param('page'));
+if(!$page)
+    $page = utils::setting('core', 'frontpage');
+
+// get action from params
+$action = filter::string(url::param('action'));
+if(!$action)
+    $action = 'main';
+
+// module main class
+require_once 'modules/'.$page.'/'.$page.'.php';
+
+// call function
+call_user_func_array(array($page, $action), url::paramsAsArray());

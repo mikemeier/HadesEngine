@@ -3,7 +3,11 @@ class url {
     private static $params = array();
 
     public function  __construct($url) {
-        self::$params = explode('/', $url);
+        $tmp = explode('/', $url);
+        // add page and action
+        array_splice($tmp, 0, 0, 'page');
+        array_splice($tmp, 2, 0, 'action');
+        self::$params = $tmp;
     }
 
     /**
@@ -21,5 +25,28 @@ class url {
         } else {
             return false;
         }
+    }
+
+    public static function paramsAsArray() {
+        $tmp = self::$params;
+        // remove page and action
+        $delete = array(0, 1, 2, 3);
+        foreach($delete as $num) {
+            unset($tmp[$num]);
+        }
+        // return everything else
+        $isParamName = true;
+        $final = array();
+        foreach($tmp as $name) {
+            // write only param values
+            if(!$isParamName) {
+                $final[] = $name;
+                // set var to skip the next item
+                $isParamName = true;
+            } else {
+                $isParamName = false;
+            }
+        }
+        return $final;
     }
 }

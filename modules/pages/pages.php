@@ -8,17 +8,16 @@ class pages {
     /**
      * main action
      */
-    public static function main() {
+    public static function main($id) {
         // get page via id or url
-        if(url::param('id')) {
-            $id = filter::int(url::param('id'));
+        if(filter::isInt($id)) {
             $page = db::fetch_array(db::query('SELECT name, url, content FROM he'.NR.'_pages
                                                WHERE
                                                     id = '.$id));
         } else {
             // get param or use default
-            if(url::param('url')) {
-                $url = filter::string(url::param('url'));
+            if($id) {
+                $url = filter::string($id);
             } else {
                 $url = 'main';
             }

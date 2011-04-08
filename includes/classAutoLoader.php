@@ -1,20 +1,21 @@
 <?php
 /**
- * Auto Load Classes
+ * Autoloader for classes
  *
  * @author  Martin Lantzsch <martin@linux-doku.de>
  */
 
 function load($name) {
     global $page;
-    $path = 'includes/classes/'.$name.'.class.php';
-    $moduleClassPath = 'modules/'.$page.'/classes/'.$name.'.class.php';
-    if(file_exists($path))
+    $path = "includes/classes/{$name}.class.php";
+    $moduleClassPath = "modules/{$page}/classes/{$name}.class.php";
+    if (file_exists($path)) {
         require_once $path;
-    elseif(file_exists($moduleClassPath))
+    } elseif (file_exists($moduleClassPath)) {
         require_once $moduleClassPath;
-    else
-        throw new Exception('classAutoLoader: Class "'.$path.'" or "'.$moduleClassPath.'" not found!');
+    } else {
+        throw new Exception("classAutoLoader: Class '{$path}' or '{$moduleClassPath}' not found!");
+    }
 }
 
 // register autoloader

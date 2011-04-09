@@ -6,10 +6,12 @@
  * @author  Martin Lantzsch <martin@linux-doku.de>
  */
 class module {
-
+    
     public static $module;
 
-
+    /**
+     * init module system (load modules appearing to current params)
+     */
     public static function init() {
         // get page from params
         $module = filter::string(url::param('module'));
@@ -26,13 +28,17 @@ class module {
         self::loadModule($module, $action);
     }
 
+    /**
+     * load module
+     * @param   string    $module
+     * @param   string    $action
+     */
     public static function loadModule($module, $action='main') {
         // module main class
         $moduleFile = 'modules/'.$module.'/'.$module.'.php';
-
         // load module if exists
-        if(file_exists($moduleFile))
-            require_once $moduleFile;
+        if(self::exists($module))
+            require $moduleFile;
         else
             throw new Exception('Bootstrap: Failed loading module {'.$module.'}');
 
@@ -42,6 +48,19 @@ class module {
 
         // call function
         call_user_func_array(array($module, $action), url::paramsAsArray());
+    }
+
+    /**
+     * check if the module exists
+     * @param   string  $name
+     * @return  bool
+     */
+    public static function exists($module) {
+        // module main class
+        $moduleFile = 'modules/'.$module.'/'.$module.'.php';
+
+        // load module if exists
+        return file_exists($moduleFile);
     }
 
 }

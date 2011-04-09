@@ -20,6 +20,14 @@ class tpl {
             $this->moduleName = $moduleName;
     }
 
+    public function lookForUserFile() {
+        $file = 'user/tpl/'.utils::current('theme').'/'.$this->moduleName.'/'.$this->tplName.'.tpl.php';
+        if(file_exists($file))
+            return $file;
+        else
+            return false;
+    }
+
     /**
      * Set new template var(s)
      * (if you give an array as $name all vars of this array will be set)
@@ -53,8 +61,12 @@ class tpl {
         }
 
         // load template
-        include 'modules/'.$this->moduleName.'/tpl/'.$this->tplName.'.tpl.php';
-
+        $userFile = $this->lookForUserFile();
+        if(!$userFile)
+            include 'modules/'.$this->moduleName.'/tpl/'.$this->tplName.'.tpl.php';
+        else
+            include $userFile;
+        
         // give all output
         return ob_get_clean();
     }

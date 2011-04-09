@@ -1,61 +1,85 @@
 <?php
-
 /**
- * some good and useful things ;-)
+ * This class provides some good and useful things. ;-)
  *
  * @author  Martin Lantzsch <martin@linux-doku.de>
  */
 class utils {
 
-    private static $settings = array();
+    private static $_settings = array();
 
     /**
-     * load settings from file to array
+     * Load settings from file into our array
+     * @return  void
      */
     public static function loadSettings() {
-        self::$settings = parse_ini_file('includes/settings.php', true);
+        self::$_settings = parse_ini_file('includes/settings.php', true);
     }
 
     /**
-     * Give value of this setting
-     * @param   string  $section
-     * @param   string  $name
+     * Get the value of a specific setting
+     * @param   string  $section  From this section...
+     * @param   string  $name     ... grab this setting
      * @return  mixed
      */
     public static function setting($section, $name) {
-        return self::$settings[$section][$name];
+        return self::$_settings[$section][$name];
     }
 
     /**
-     * Get current
-     * - module
-     * - action
-     * - theme
-     * @global  string  $module
-     * @param   string  $name
+     * Get the current module, action or theme
+     * @param   string  $aspect  Which aspect do you want to know? Possible values: 'module', 'action', 'theme'
+     * @global  string  $page
      * @return  string
      */
-    public static function current($name) {
-        if($name == 'module') {
-            if(url::param('page')) {
+    public static function current($aspect) {
+        if ($aspect == 'module') {
+            if (url::param('page')) {
                 return url::param('page');
             } else {
                 global $module;
                 return $module;
             }
-        } elseif($name == 'action') {
-            if(url::param('action'))
+        } elseif ($aspect == 'action') {
+            if (url::param('action')) {
                 return url::param('action');
-            else
+            } else {
                 return 'main';
-        } elseif($name == 'theme') {
+            }
+        } elseif($aspect == 'theme') {
             return self::setting('core', 'theme');
         }
     }
 
     /**
+     * Generates a URL from given module, action and arguments
+     * @param   string  $module  The module where the link goes to. If NULL the current module is used.
+     * @param   string  $action  The action where the link goes to. If NULL the current action is used.
+     * @param   array   $args    The arguments to use, optional.
+     * @return  string
+     */
+    function makeURL($module = null, $action = null, $args = null) {
+        $url = '?p=';
+        if (is_string($module)) {
+            $url .= $module;
+        } else {
+            $url .= self::current('module');
+        }
+        if (is_string($action)) {
+            $url .= '/'.$action;
+        } else {
+            $url .= '/'.self::current('action');
+        }
+        if (is_array($args)) {
+            foreach ($args as $arg) {
+                $url .= '/'.$arg;
+            }
+        }
+        return $url;
+    }
+
+    /**
      * Write given array to ini file
-     *
      * @param   string   $file
      * @return  array    $content
      */

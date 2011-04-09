@@ -86,20 +86,36 @@ class tpl {
         include 'themes/'.utils::current('theme').'/footer.tpl.php';
     }
 
+    /**
+     * add a javascript file to template
+     * @param   string   $module
+     * @param   string   $name
+     */
     public static function addJS($module, $name) {
         self::$js[$module] = $name;
     }
 
+    /**
+     * print actual loaded js files
+     */
     public static function printJS() {
         foreach(self::$js as $module => $name) {
             echo "<script type='text/javascript' src='/modules/".$module."/".$name.".js'></script>\n";
         }
     }
 
+    /**
+     * add a css file to template
+     * @param   string   $module
+     * @param   string   $name
+     */
     public static function addCSS($module, $name) {
         self::$css[$module] = $name;
     }
 
+    /**
+     * print actual loaded css files
+     */
     public static function printCSS() {
         echo "<style type='text/css'>\n";
         foreach(self::$css as $module => $name) {

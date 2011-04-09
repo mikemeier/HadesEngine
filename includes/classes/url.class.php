@@ -2,10 +2,10 @@
 class url {
     private static $params = array();
 
-    public function  __construct($url) {
+    public function init($url) {
         $tmp = explode('/', $url);
         // add page and action
-        array_splice($tmp, 0, 0, 'page');
+        array_splice($tmp, 0, 0, 'module');
         array_splice($tmp, 2, 0, 'action');
         self::$params = $tmp;
     }

@@ -67,6 +67,10 @@ class lang {
      * @return  string
      */
     public static function get($string) {
-        return self::$strings[$string];
+        $var = self::$strings[$string];
+        if($var)
+            return $var;
+        else
+            return $string;
     }
 }

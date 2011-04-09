@@ -31,7 +31,7 @@ class utils {
      * - module
      * - action
      * - theme
-     * @global  string  $page
+     * @global  string  $module
      * @param   string  $name
      * @return  string
      */
@@ -40,8 +40,8 @@ class utils {
             if(url::param('page')) {
                 return url::param('page');
             } else {
-                global $page;
-                return $page;
+                global $module;
+                return $module;
             }
         } elseif($name == 'action') {
             if(url::param('action'))

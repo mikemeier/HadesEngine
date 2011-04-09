@@ -7,6 +7,15 @@
 class filter {
 
     /**
+     * check if var is a string
+     * @param   mixed   $var
+     * @return  bool
+     */
+    public static function isString($var) {
+        return is_string($var);
+    }
+
+    /**
      * check if var is bool
      * @param   mixed   $var
      * @return  bool

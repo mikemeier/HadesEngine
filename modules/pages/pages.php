@@ -1,24 +1,26 @@
 <?php
+
 /**
  * display pages from database
  *
  * @author  Martin Lantzsch <martin@linux-doku.de>
  */
 class pages {
+
     /**
      * main action
      */
-    public static function main() {
+    public static function main($id=false) {
         // get page via id or url
-        if (url::param('id')) {
-            $id = filter::int(url::param('id'));
+        if(filter::isInt($id)) {
+            $id = core::$db->escape($id);
 
             $result = core::$db->query('SELECT name, url, content FROM {PREFIX}pages WHERE id = ?', array($id));
             $page = core::$db->fetchArray($result);
         } else {
             // get param or use default
-            if (url::param('url')) {
-                $url = filter::string(url::param('url'));
+            if(is_string($id)) {
+                $url = core::$db->escape($id);
             } else {
                 $url = 'main';
             }
@@ -28,17 +30,18 @@ class pages {
         }
 
         // show a 404 page if no data is served
-        if (!$page) {
+        if(!$page) {
             $page['name'] = '404';
             $page['content'] = 'Sorry it\'s not here!';
         }
 
         // set page name in front of site name
-        tpl::title("{$page['name']} - ");
+        tpl::title($page['name'].' - ');
 
         // build page
         $tpl = new tpl('page');
         $tpl->set($page);
         echo $tpl->parse();
     }
+
 }

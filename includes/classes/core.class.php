@@ -9,7 +9,7 @@ class core {
     public static $db;
 
     public static function connectDB($host, $user, $password, $database) {
-        if (self::$db !instanceof database)
+        if (!self::$db instanceof database)
             self::$db = new database($host, $user, $password, $database);
     }
 

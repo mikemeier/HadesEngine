@@ -78,7 +78,7 @@ class database {
         }
         $selecting_base = mysql_select_db($this->_name, $this->_linkID);
         if (!$selecting_base) {
-            trigger_error("Failed selecting the database", E_USER_ERROR);
+            trigger_error("Failed seleting the database", E_USER_ERROR);
         }
         return $this->_linkID;
     }
@@ -110,7 +110,7 @@ class database {
         $result = mysql_query($query, $this->_linkID);
         $this->_queryCount++;
         if (!$result) {
-            trigger_error('Database query failed. Database server logs: ' . $this->error(), E_USER_ERROR);
+            trigger_error('Database query failed. Database server logs: ' . $this->getError(), E_USER_ERROR);
         }
         return $result;
     }
@@ -128,7 +128,7 @@ class database {
         $query = $this->_prepareQuery($query, $vars);
         $result = mysql_unbuffered_query($query, $this->_linkID);
         if (!$result) {
-            trigger_error('Database query failed. Database server logs: ' . $this->error(), E_USER_ERROR);
+            trigger_error('Database query failed. Database server logs: ' . $this->getError(), E_USER_ERROR);
         }
         return $result;
     }

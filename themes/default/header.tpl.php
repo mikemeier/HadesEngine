@@ -2,6 +2,8 @@
     <head>
         <title><?php echo tpl::title() ?></title>
     </head>
+    <?php tpl::printJS() ?>
+    <?php tpl::printCSS() ?>
     <style type="text/css">
         @import url('themes/default/style.css');
     </style>

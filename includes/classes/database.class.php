@@ -78,7 +78,7 @@ class database {
         }
         $selecting_base = mysql_select_db($this->_name, $this->_linkID);
         if (!$selecting_base) {
-            trigger_error("Failed selecting the database", E_USER_ERROR);
+            trigger_error("Failed seleting the database", E_USER_ERROR);
         }
         return $this->_linkID;
     }

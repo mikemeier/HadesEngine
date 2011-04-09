@@ -2,8 +2,10 @@
 class tpl {
     private $tplName;
     private $moduleName;
-    private static $pageTitle;
     private $vars = array();
+    private static $pageTitle;
+    private static $js = array();
+    private static $css = array();
 
     /**
      * Generate new template object
@@ -82,5 +84,27 @@ class tpl {
      */
     public static function footer() {
         include 'themes/'.utils::current('theme').'/footer.tpl.php';
+    }
+
+    public static function addJS($module, $name) {
+        self::$js[$module] = $name;
+    }
+
+    public static function printJS() {
+        foreach(self::$js as $module => $name) {
+            echo "<script type='text/javascript' src='/modules/".$module."/".$name.".js'></script>\n";
+        }
+    }
+
+    public static function addCSS($module, $name) {
+        self::$css[$module] = $name;
+    }
+
+    public static function printCSS() {
+        echo "<style type='text/css'>\n";
+        foreach(self::$css as $module => $name) {
+            echo "@import url('/modules/".$module."/".$name.".js');\n";
+        }
+        echo "</style>\n";
     }
 }

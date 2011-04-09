@@ -19,7 +19,7 @@ class pages {
             $page = core::$db->fetchArray($result);
         } else {
             // get param or use default
-            if(is_string($id)) {
+            if(filter::isString($id)) {
                 $url = core::$db->escape($id);
             } else {
                 $url = 'main';

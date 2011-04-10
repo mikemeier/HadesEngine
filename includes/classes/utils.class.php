@@ -13,7 +13,7 @@ class utils {
      * @return  void
      */
     public static function loadSettings() {
-        self::$_settings = parse_ini_file('includes/settings.php', true);
+        self::$_settings = parse_ini_file('includes/settings.ini.php', true);
     }
 
     /**

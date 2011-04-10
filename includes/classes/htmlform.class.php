@@ -506,9 +506,9 @@ class htmlform {
                 if ($options['scheme'] == 'email') {
                     $valid = filter::isEmail($var);
                 } elseif ($options['scheme'] == 'url') {
-                    $valid = filter::isUrl($var);
+                    $valid = filter::isURL($var);
                 } elseif ($options['scheme'] == 'ip') {
-                    $valid = filter::isIp($var);
+                    $valid = filter::isIP($var);
                 } elseif ($options['scheme'] == 'regex' && isset($options['regex_pattern'])) {
                     $valid = filter::matchesRegex($var, $options['regex_pattern']);
                 }

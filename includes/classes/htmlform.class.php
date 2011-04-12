@@ -385,7 +385,7 @@ class htmlform {
         $imageWidth = isset($params['image_width']) ? $params['image_width'] : 170;
         $imageHeight = isset($params['image_height']) ? $params['image_height'] : 60;
         // TODO: where do we save the files?
-        $fontsDir = isset($params['fonts_dir']) ? $params['fonts_dir'] : HADES_DIR_BASE . 'files/fonts/';
+        $fontsDir = isset($params['fonts_dir']) ? $params['fonts_dir'] : HADES_DIR_ROOT . 'files/fonts/';
         $fontsList = is_array($params['fonts_list']) ? $params['fonts_list'] : array('xfiles.ttf', 'dinstik.ttf', 'hisverd.ttf');
 
         $params['maxlength'] = $captchaLength;

@@ -57,13 +57,15 @@ class module {
             $action = 'main';
 
         // before action
-        call_user_func(array($module, 'before'), $action);
+        if(method_exists($module, 'before'))
+            call_user_func(array($module, 'before'), $action);
 
         // call function
         call_user_func_array(array($module, $action), url::paramsAsArray());
 
         // after action
-        call_user_func(array($module, 'after'), $action);
+        if(method_exists($module, 'after'))
+            call_user_func(array($module, 'after'), $action);
     }
 
     /**

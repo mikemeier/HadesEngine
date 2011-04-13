@@ -6,20 +6,50 @@
  */
 class tpl {
 
+    /**
+     * The name of the currently loaded template
+     * @var     string
+     * @access  private
+     */
     private $tplName;
 
+    /**
+     * The name of the currently active module
+     * @var     string
+     * @access  private
+     */
     private $moduleName;
 
+    /**
+     * All assigned template variables
+     * @var     array
+     * @access  private
+     */
     private $vars = array();
 
+    /**
+     * The title of the page
+     * @var     string
+     * @access  private
+     */
     private static $pageTitle;
 
+    /**
+     * All JavaScripts to include
+     * @var     array
+     * @access  private
+     */
     private static $js = array();
 
+    /**
+     * All CSS files to include
+     * @var     array
+     * @access  private
+     */
     private static $css = array();
 
     /**
-     * Generate new template object
+     * Generates a new template object
      * @param   string   $tplName     The name of the template to load (without '.tpl.php')
      * @param   mixed    $moduleName  Load from this module
      * @return  void
@@ -31,14 +61,6 @@ class tpl {
             $this->moduleName = utils::current('module');
         else
             $this->moduleName = $moduleName;
-    }
-
-    public function lookForUserFile() {
-        $file = 'user/tpl/'.utils::current('theme').'/'.$this->moduleName.'/'.$this->tplName.'.tpl.php';
-        if(file_exists($file))
-            return $file;
-        else
-            return false;
     }
 
     /**
@@ -75,13 +97,13 @@ class tpl {
             $$tplVarName = $tplVarValue;
         }
         // load the template file
-        include 'modules/'.$this->moduleName.'/tpl/'.$this->tplName.'.tpl.php';
+        include 'modules/'.$this->moduleName.'/tpl/'.utils::current('theme')'/'.$this->tplName.'.tpl.php';
         // return it
         return ob_get_clean();
     }
 
     /**
-     * Set or get the page title
+     * Sets or gets the page title
      * @param   string|bool  $title  The title
      * @return  string
      * @access  public
@@ -95,22 +117,22 @@ class tpl {
     }
 
     /**
-     * Print the header of the selected theme
+     * Prints the header of the selected theme
      * @return  void
      * @access  public
      */
     public static function header() {
         // include header file
-        include 'themes/'.utils::current('theme').'/header.tpl.php';
+        include 'modules/core/tpl/'.utils::current('theme').'/header.tpl.php';
     }
 
     /**
-     * Print the footer of the selected theme
+     * Prints the footer of the selected theme
      * @return  void
      * @access  public
      */
     public static function footer() {
-        include 'themes/'.utils::current('theme').'/footer.tpl.php';
+        include 'modules/core/tpl/'.utils::current('theme').'/footer.tpl.php';
     }
 
     /**

@@ -97,7 +97,7 @@ class tpl {
             $$tplVarName = $tplVarValue;
         }
         // load the template file
-        include 'modules/'.$this->moduleName.'/tpl/'.utils::current('theme')'/'.$this->tplName.'.tpl.php';
+        include 'modules/'.$this->moduleName.'/tpl/'.utils::current('theme').'/'.$this->tplName.'.tpl.php';
         // return it
         return ob_get_clean();
     }

@@ -1,44 +1,65 @@
 <?php
+/**
+ * This class parses the URL
+ *
+ * @author  Martin Lantzsch <martin@linux-doku.de>
+ */
 class url {
+
+    /**
+     * All params extracted from the URL
+     * @var     string
+     * @access  private
+     */
     private static $params = array();
 
+    /**
+     * Initializes the URL parser
+     * @param   string  $url  The URL to parse
+     * @return  void
+     * @access  public
+     */
     public static function init($url) {
-        $tmp = explode('/', $url);
+        $parsedParams = explode('/', $url);
+
         // add page and action
-        array_splice($tmp, 0, 0, 'module');
-        array_splice($tmp, 2, 0, 'action');
-        self::$params = $tmp;
+        array_splice($parsedParams, 0, 0, 'module');
+        array_splice($parsedParams, 2, 0, 'action');
+
+        self::$params = $parsedParams;
     }
 
     /**
-     * Get value of a param
-     * @param   string  $name
+     * Gets the value of a parameter
+     * @param   string  $name  The name of the parameter
      * @return  mixed
+     * @access  public
      */
     public static function param($name) {
         // serach for key of the param name
-        $tmp = array_search($name, self::$params);
-        if(is_int($tmp)) {
+        $param = array_search($name, self::$params);
+        if(is_int($param)) {
             // key plus one is the value of this param
-            $key = $tmp + 1;
+            $key = $param + 1;
             return self::$params[$key];
         } else {
             return false;
         }
     }
 
+    /**
+     * Gets all parameters as an array
+     * @return  array
+     * @access  public
+     */
     public static function paramsAsArray() {
-        $tmp = self::$params;
         // remove page and action
-        $delete = array(0, 1, 2, 3);
-        foreach($delete as $num) {
-            unset($tmp[$num]);
-        }
-        // return everything else
+        $tmp = array_slice(self::$params, 4);
+
+        // create returning array without param names
         $isParamName = true;
         $final = array();
         foreach($tmp as $name) {
-            // write only param values
             if(!$isParamName) {
                 $final[] = $name;
                 // set var to skip the next item
@@ -47,6 +68,8 @@ class url {
                 $isParamName = false;
             }
         }
+
         return $final;
     }
+
 }

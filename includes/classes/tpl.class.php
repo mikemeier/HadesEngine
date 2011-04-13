@@ -1,18 +1,61 @@
 <?php
+/**
+ * Template parser class
+ *
+ * @author  Martin Lantzsch <martin@linux-doku.de>
+ */
 class tpl {
+
+    /**
+     * The name of the currently loaded template
+     * @var     string
+     * @access  private
+     */
     private $tplName;
+
+    /**
+     * The name of the currently active module
+     * @var     string
+     * @access  private
+     */
     private $moduleName;
+
+    /**
+     * All assigned template variables
+     * @var     array
+     * @access  private
+     */
     private $vars = array();
+
+    /**
+     * The title of the page
+     * @var     string
+     * @access  private
+     */
     private static $pageTitle;
+
+    /**
+     * All JavaScripts to include
+     * @var     array
+     * @access  private
+     */
     private static $js = array();
+
+    /**
+     * All CSS files to include
+     * @var     array
+     * @access  private
+     */
     private static $css = array();
 
     /**
-     * Generate new template object
-     * @param   string   $tplName
-     * @param   mixed    $moduleName
+     * Generates a new template object
+     * @param   string   $tplName     The name of the template to load (without '.tpl.php')
+     * @param   mixed    $moduleName  Load from this module
+     * @return  void
+     * @access  public
      */
-    public function  __construct($tplName, $moduleName=false) {
+    public function __construct($tplName, $moduleName = false) {
         $this->tplName = $tplName;
         if(!$moduleName)
             $this->moduleName = utils::current('module');
@@ -20,19 +63,13 @@ class tpl {
             $this->moduleName = $moduleName;
     }
 
-    public function lookForUserFile() {
-        $file = 'user/tpl/'.utils::current('theme').'/'.$this->moduleName.'/'.$this->tplName.'.tpl.php';
-        if(file_exists($file))
-            return $file;
-        else
-            return false;
-    }
-
     /**
-     * Set new template var(s)
-     * (if you give an array as $name all vars of this array will be set)
-     * @param   mixed  $name
-     * @param   mixed  $value
+     * Sets (a) template variable(s)
+     * @param   mixed  $name   The name of the variable. If an array is given, each of its items will be set as variable
+     *                           where the key is the name.
+     * @param   mixed  $value  The value of the variable. If you use an array in $name, this parameter can be omitted.
+     * @return  void
+     * @access  public
      */
     public function set($name, $value=false) {
         // check if array
@@ -48,91 +85,107 @@ class tpl {
     }
 
     /**
-     * Parse template and return it
+     * Parses the template and returns it
      * @return  string
+     * @access  public
      */
     public function parse() {
         // start output
         ob_start();
-
-        // go through all vars
+        // go through all vars and define them as real ones
         foreach($this->vars as $tplVarName => $tplVarValue) {
             $$tplVarName = $tplVarValue;
         }
-
-        // load template
-        $userFile = $this->lookForUserFile();
-        if(!$userFile)
-            include 'modules/'.$this->moduleName.'/tpl/'.$this->tplName.'.tpl.php';
-        else
-            include $userFile;
-        
-        // give all output
+        // load the template file
+        include 'modules/'.$this->moduleName.'/tpl/'.utils::current('theme')'/'.$this->tplName.'.tpl.php';
+        // return it
         return ob_get_clean();
     }
 
     /**
-     * Set or get the page title
-     * @param   string/bool  $title
+     * Sets or gets the page title
+     * @param   string|bool  $title  The title
      * @return  string
+     * @access  public
      */
-    public static function title($title=false) {
-        if($title)
+    public static function title($title = false) {
+        if($title) {
             return self::$pageTitle = $title.self::$pageTitle;
-        else
+        } else {
             return self::$pageTitle;
+        }
     }
 
     /**
-     * Print header of selected theme
+     * Prints the header of the selected theme
+     * @return  void
+     * @access  public
      */
     public static function header() {
         // include header file
-        include 'themes/'.utils::current('theme').'/header.tpl.php';
+        include 'modules/core/tpl/'.utils::current('theme').'/header.tpl.php';
     }
 
     /**
-     * Print footer of the selected theme
+     * Prints the footer of the selected theme
+     * @return  void
+     * @access  public
      */
     public static function footer() {
-        include 'themes/'.utils::current('theme').'/footer.tpl.php';
+        include 'modules/core/tpl/'.utils::current('theme').'/footer.tpl.php';
     }
 
     /**
-     * add a javascript file to template
-     * @param   string   $module
-     * @param   string   $name
+     * Adds a JavaScript file to the list
+     * @param   string  $module  Load from this module...
+     * @param   string  $name    ... this file (without '.js')
+     * @param   bool    $once    Determines if the element should only be added once. Defaults to TRUE.
+     * @return  bool
      */
-    public static function addJS($module, $name) {
-        self::$js[$module] = $name;
+    public static function addJS($module, $name, $once = true) {
+        if ($once && in_array($name, self::$js)) {
+            return false;
+        }
+        self::$js[] = array($module, $name);
+        return true;
     }
 
     /**
-     * print actual loaded js files
+     * Prints out the list of JavaScript files
+     * @return  void
+     * @access  public
      */
     public static function printJS() {
-        foreach(self::$js as $module => $name) {
-            echo "<script type='text/javascript' src='/modules/".$module."/".$name.".js'></script>\n";
+        foreach(self::$js as $entry) {
+            echo '<script type="text/javascript" src="/modules/'.$entry[0].'/js/'.$entry[1].'.js"></script>'."\n";
         }
     }
 
     /**
-     * add a css file to template
-     * @param   string   $module
-     * @param   string   $name
+     * Adds a CSS file to the list
+     * @param   string  $module  Load from this module...
+     * @param   string  $name    ... this file (without '.css')
+     * @param   string  $media   Only for this media types. Defaults to 'all'.
+     * @param   bool    $once    Determines if the element should only be added once. Defaults to TRUE.
+     * @return  bool
      */
-    public static function addCSS($module, $name) {
-        self::$css[$module] = $name;
+    public static function addCSS($module, $name, $media = 'all', $once = true) {
+        if ($once && in_array($name, self::$css)) {
+            return false;
+        }
+        self::$css[] = array($module, $name, $media);
+        return true;
     }
 
     /**
-     * print actual loaded css files
+     * Prints out the list of CSS files
+     * @return  void
+     * @access  public
      */
     public static function printCSS() {
-        echo "<style type='text/css'>\n";
-        foreach(self::$css as $module => $name) {
-            echo "@import url('/modules/".$module."/".$name.".js');\n";
+        foreach(self::$js as $entry) {
+            echo '<link rel="stylesheet" type="text/css" media="'.$entry[2].'" src="/modules/'.$entry[0].'/css/'.$entry[1].'.css" />'."\n";
         }
-        echo "</style>\n";
     }
+
 }

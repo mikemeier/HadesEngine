@@ -385,7 +385,7 @@ class htmlform {
         $imageWidth = isset($params['image_width']) ? $params['image_width'] : 170;
         $imageHeight = isset($params['image_height']) ? $params['image_height'] : 60;
         // TODO: where do we save the files?
-        $fontsDir = isset($params['fonts_dir']) ? $params['fonts_dir'] : HADES_DIR_BASE . 'files/fonts/';
+        $fontsDir = isset($params['fonts_dir']) ? $params['fonts_dir'] : HADES_DIR_ROOT . 'files/fonts/';
         $fontsList = is_array($params['fonts_list']) ? $params['fonts_list'] : array('xfiles.ttf', 'dinstik.ttf', 'hisverd.ttf');
 
         $params['maxlength'] = $captchaLength;
@@ -506,9 +506,9 @@ class htmlform {
                 if ($options['scheme'] == 'email') {
                     $valid = filter::isEmail($var);
                 } elseif ($options['scheme'] == 'url') {
-                    $valid = filter::isUrl($var);
+                    $valid = filter::isURL($var);
                 } elseif ($options['scheme'] == 'ip') {
-                    $valid = filter::isIp($var);
+                    $valid = filter::isIP($var);
                 } elseif ($options['scheme'] == 'regex' && isset($options['regex_pattern'])) {
                     $valid = filter::matchesRegex($var, $options['regex_pattern']);
                 }

@@ -2,7 +2,7 @@
 class url {
     private static $params = array();
 
-    public function init($url) {
+    public static function init($url) {
         $tmp = explode('/', $url);
         // add page and action
         array_splice($tmp, 0, 0, 'module');

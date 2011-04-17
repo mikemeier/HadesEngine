@@ -73,7 +73,7 @@ class tpl {
      */
     public function set($name, $value=false) {
         // check if array
-        if(!is_array($name) & !$value) {
+        if(!is_array($name) && $value) {
             // assign var to array
             $this->vars[$name] = $value;
         } else {

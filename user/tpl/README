@@ -1,7 +1,0 @@
-here you can put customized tpl's
-
-/user/tpl/[THEME NAME]/[MODULE NAME]/[TEMPLATE NAME].tpl.php
-
-for example
-
-/user/tpl/default/home/home.tpl.php

@@ -61,7 +61,7 @@ class module {
             call_user_func(array($module, 'before'), $action);
 
         // call function
-        call_user_func_array(array($module, $action), url::paramsAsArray());
+        call_user_func_array(array($module, 'action_'.$action), url::paramsAsArray());
 
         // after action
         if(method_exists($module, 'after'))

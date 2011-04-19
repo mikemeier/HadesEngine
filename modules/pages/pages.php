@@ -1,7 +1,6 @@
 <?php
-
 /**
- * display pages from database
+ * Display pages from database
  *
  * @author  Martin Lantzsch <martin@linux-doku.de>
  */
@@ -10,7 +9,7 @@ class pages {
     /**
      * main action
      */
-    public static function main($id=false) {
+    public static function action_main($id = false) {
         // get page via id or url
         if(filter::isInt($id)) {
             $id = core::$db->escape($id);

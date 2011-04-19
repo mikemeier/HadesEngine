@@ -1,18 +1,32 @@
 <?php
 /**
- * The core class provides all globally available objects.
+ * The core class provides basic functionality and all globally available objects
  *
  * @author Christian Neff <christian.neff@gmail.com>
  */
 class core {
 
+    /**
+     * The database class object
+     * @var     object
+     * @access  public
+     * @static
+     */
     public static $db;
 
+    /**
+     * All loaded settings
+     * @var     array
+     * @access  private
+     * @static
+     */
     private static $_settings = array();
 
     /**
      * Load settings from file into our array
      * @return  void
+     * @access  public
+     * @static
      */
     public static function loadSettings() {
         self::$_settings = parse_ini_file('includes/settings.ini.php', true);
@@ -23,6 +37,8 @@ class core {
      * @param   string  $section  From this section...
      * @param   string  $name     ... grab this setting
      * @return  mixed
+     * @access  public
+     * @static
      */
     public static function setting($section, $name) {
         return self::$_settings[$section][$name];
@@ -33,6 +49,8 @@ class core {
      * @param   string  $aspect  Which aspect do you want to know? Possible values: 'module', 'action', 'theme'
      * @global  string  $page
      * @return  string
+     * @access  public
+     * @static
      */
     public static function current($aspect) {
         if ($aspect == 'module') {
@@ -58,6 +76,9 @@ class core {
      * @param   string   $user      The username to authenticate
      * @param   string   $password  The password to authenticate
      * @param   string   $database  The name of the database
+     * @return  void
+     * @access  public
+     * @static
      */
     public static function connectDB($host, $user, $password, $database) {
         if (!self::$db instanceof database)

@@ -10,6 +10,7 @@ class module {
      * The currently loaded module
      * @var     string
      * @access  public
+     * @static
      */
     public static $module;
 
@@ -17,6 +18,7 @@ class module {
      * Initializes the module system (load modules appearing to current params)
      * @return  void
      * @access  public
+     * @static
      */
     public static function init() {
         // get page from params
@@ -40,6 +42,7 @@ class module {
      * @param   string  $action  The name of the action
      * @return  void
      * @access  public
+     * @static
      */
     public static function loadModule($module, $action = 'main') {
         // module main class
@@ -73,6 +76,7 @@ class module {
      * @param   string  $name  The name of the module
      * @return  bool
      * @access  public
+     * @static
      */
     public static function exists($module) {
         // module main class

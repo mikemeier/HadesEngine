@@ -12,6 +12,7 @@ class utils {
      * @param   string  $action  The action where the link goes to. If NULL the current action is used.
      * @param   array   $args    The arguments to use, optional.
      * @return  string
+     * @static
      */
     public static function makeURL($module = null, $action = null, $args = null) {
         $url = '?p=';
@@ -34,15 +35,16 @@ class utils {
     }
 
     /**
-     * Write given array to ini file
-     * @param   string   $file
-     * @return  array    $content
+     * Writes a given array to an .ini file
+     * @param   string   $file     The file to write to
+     * @return  array    $content  The input array
+     * @static
      */
     public static function writeArrayToIni($file, $content) {
         if(is_writeable($file) == true || !file_exists($file)) {
             $c = ";<?php die() ?>\n";
             foreach($content as $item1 => $item2) {
-                if(is_array($item2)) {
+                if (is_array($item2)) {
                     $c = $c.'['.$item1."]\n";
                     foreach($item2 as $item3 => $item4) {
                         $c = $c.$item3.' = '.$item4."\n";

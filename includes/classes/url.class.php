@@ -10,14 +10,16 @@ class url {
      * All params extracted from the URL
      * @var     string
      * @access  private
+     * @static
      */
-    private static $params = array();
+    private static $_params = array();
 
     /**
      * Initializes the URL parser
      * @param   string  $url  The URL to parse
      * @return  void
      * @access  public
+     * @static
      */
     public static function init($url) {
         $parsedParams = explode('/', $url);
@@ -26,7 +28,7 @@ class url {
         array_splice($parsedParams, 0, 0, 'module');
         array_splice($parsedParams, 2, 0, 'action');
 
-        self::$params = $parsedParams;
+        self::$_params = $parsedParams;
     }
 
     /**
@@ -34,14 +36,15 @@ class url {
      * @param   string  $name  The name of the parameter
      * @return  mixed
      * @access  public
+     * @static
      */
     public static function param($name) {
         // serach for key of the param name
-        $param = array_search($name, self::$params);
+        $param = array_search($name, self::$_params);
         if(is_int($param)) {
             // key plus one is the value of this param
             $key = $param + 1;
-            return self::$params[$key];
+            return self::$_params[$key];
         } else {
             return false;
         }
@@ -51,10 +54,11 @@ class url {
      * Gets all parameters as an array
      * @return  array
      * @access  public
+     * @static
      */
     public static function paramsAsArray() {
         // remove page and action
-        $tmp = array_slice(self::$params, 4);
+        $tmp = array_slice(self::$_params, 4);
 
         // create returning array without param names
         $isParamName = true;

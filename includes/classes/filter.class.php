@@ -11,6 +11,7 @@ class filter {
      * @param   mixed  $var  The variable to check
      * @return  bool
      * @access  public
+     * @static
      */
     public static function isString($var) {
         return is_string($var);
@@ -23,6 +24,7 @@ class filter {
      *                             is returned for all non-boolean values
      * @return  bool
      * @access  public
+     * @static
      */
     public static function isBool($var, $strict = false) {
         if ($strict) {
@@ -42,6 +44,7 @@ class filter {
      *                             see {@link http://www.php.net/manual/en/filter.filters.validate.php}
      * @return  bool
      * @access  public
+     * @static
      */
     public static function isInt($var, $options = array(), $flags = 0) {
         $optArg = array('options' => $options, 'flags' => $flags);
@@ -57,6 +60,7 @@ class filter {
      *                             see {@link http://www.php.net/manual/en/filter.filters.validate.php}
      * @return  bool
      * @access  public
+     * @static
      */
     public static function isFloat($var, $options = array(), $flags = 0) {
         $optArg = array('options' => $options, 'flags' => $flags);
@@ -68,6 +72,7 @@ class filter {
      * @param   mixed  $var  The variable to check
      * @return  bool
      * @access  public
+     * @static
      */
     public static function isEmail($var) {
         return filter_var($var, FILTER_VALIDATE_EMAIL);
@@ -80,6 +85,7 @@ class filter {
      *                           see {@link http://www.php.net/manual/en/filter.filters.validate.php}
      * @return  bool
      * @access  public
+     * @static
      */
     public static function isURL($var, $flags = 0) {
         $optArg = array('flags' => $flags);
@@ -93,6 +99,7 @@ class filter {
      *                           see {@link http://www.php.net/manual/en/filter.filters.validate.php}
      * @return  bool
      * @access  public
+     * @static
      */
     public static function isIP($var, $flags = 0) {
         $optArg = array('flags' => $flags);
@@ -105,6 +112,7 @@ class filter {
      * @param   string  $pattern  Match against this pattern
      * @return  bool
      * @access  public
+     * @static
      */
     public static function matchesRegex($var, $pattern = '') {
         $optArg = array('options' => array('regexp' => $pattern));
@@ -116,6 +124,7 @@ class filter {
      * @param   mixed  $var  The variable to sanitize
      * @return  int
      * @access  public
+     * @static
      */
     public static function int($var) {
         return filter_var($var, FILTER_SANITIZE_NUMBER_INT);
@@ -128,6 +137,7 @@ class filter {
      *                           see {@link http://www.php.net/manual/en/filter.filters.sanitize.php}
      * @return  float
      * @access  public
+     * @static
      */
     public static function float($var, $flags = 0) {
         $optArg = array('flags' => $flags);
@@ -141,6 +151,7 @@ class filter {
      *                            see {@link http://www.php.net/manual/en/filter.filters.sanitize.php}
      * @return  string
      * @access  public
+     * @static
      */
     public static function string($var, $flags = 0) {
         $optArg = array('flags' => $flags);
@@ -152,6 +163,7 @@ class filter {
      * @param   mixed  $var  The variable to sanitize
      * @return  string
      * @access  public
+     * @static
      */
     public static function sanitizeEmail($var) {
         return filter_var($var, FILTER_SANITIZE_EMAIL);
@@ -162,6 +174,7 @@ class filter {
      * @param   mixed  $var  The variable to sanitize
      * @return  string
      * @access  public
+     * @static
      */
     public static function sanitizeURL($var) {
         return filter_var($var, FILTER_SANITIZE_URL);

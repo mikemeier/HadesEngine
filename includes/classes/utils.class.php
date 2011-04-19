@@ -6,50 +6,6 @@
  */
 class utils {
 
-    private static $_settings = array();
-
-    /**
-     * Load settings from file into our array
-     * @return  void
-     */
-    public static function loadSettings() {
-        self::$_settings = parse_ini_file('includes/settings.ini.php', true);
-    }
-
-    /**
-     * Get the value of a specific setting
-     * @param   string  $section  From this section...
-     * @param   string  $name     ... grab this setting
-     * @return  mixed
-     */
-    public static function setting($section, $name) {
-        return self::$_settings[$section][$name];
-    }
-
-    /**
-     * Get the current module, action or theme
-     * @param   string  $aspect  Which aspect do you want to know? Possible values: 'module', 'action', 'theme'
-     * @global  string  $page
-     * @return  string
-     */
-    public static function current($aspect) {
-        if ($aspect == 'module') {
-            if (url::param('page')) {
-                return url::param('page');
-            } else {
-                return module::$module;
-            }
-        } elseif ($aspect == 'action') {
-            if (url::param('action')) {
-                return url::param('action');
-            } else {
-                return 'main';
-            }
-        } elseif($aspect == 'theme') {
-            return self::setting('core', 'theme');
-        }
-    }
-
     /**
      * Generates a URL from given module, action and arguments
      * @param   string  $module  The module where the link goes to. If NULL the current module is used.
@@ -57,17 +13,17 @@ class utils {
      * @param   array   $args    The arguments to use, optional.
      * @return  string
      */
-    function makeURL($module = null, $action = null, $args = null) {
+    public static function makeURL($module = null, $action = null, $args = null) {
         $url = '?p=';
         if (is_string($module)) {
             $url .= $module;
         } else {
-            $url .= self::current('module');
+            $url .= core::current('module');
         }
         if (is_string($action)) {
             $url .= '/'.$action;
         } else {
-            $url .= '/'.self::current('action');
+            $url .= '/'.core::current('action');
         }
         if (is_array($args)) {
             foreach ($args as $arg) {

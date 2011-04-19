@@ -58,7 +58,7 @@ class tpl {
     public function __construct($tplName, $moduleName = false) {
         $this->tplName = $tplName;
         if(!$moduleName)
-            $this->moduleName = utils::current('module');
+            $this->moduleName = core::current('module');
         else
             $this->moduleName = $moduleName;
     }
@@ -97,7 +97,7 @@ class tpl {
             $$tplVarName = $tplVarValue;
         }
         // load the template file
-        include 'modules/'.$this->moduleName.'/tpl/'.utils::current('theme').'/'.$this->tplName.'.tpl.php';
+        include 'modules/'.$this->moduleName.'/tpl/'.core::current('theme').'/'.$this->tplName.'.tpl.php';
         // return it
         return ob_get_clean();
     }
@@ -123,7 +123,7 @@ class tpl {
      */
     public static function header() {
         // include header file
-        include 'modules/core/tpl/'.utils::current('theme').'/header.tpl.php';
+        include 'modules/core/tpl/'.core::current('theme').'/header.tpl.php';
     }
 
     /**
@@ -132,7 +132,7 @@ class tpl {
      * @access  public
      */
     public static function footer() {
-        include 'modules/core/tpl/'.utils::current('theme').'/footer.tpl.php';
+        include 'modules/core/tpl/'.core::current('theme').'/footer.tpl.php';
     }
 
     /**

@@ -12,25 +12,25 @@ session_start();
 require_once 'classAutoLoader.php';
 
 // load settings
-utils::loadSettings();
+core::loadSettings();
 
 // define install constant
-define('NR', utils::setting('core', 'install_number'));
+define('NR', core::setting('core', 'install_number'));
 
 // connect to database
-core::connectDB(utils::setting('core', 'db_host'),
-                utils::setting('core', 'db_user'),
-                utils::setting('core', 'db_password'),
-                utils::setting('core', 'db_database'));
+core::connectDB(core::setting('core', 'db_host'),
+                core::setting('core', 'db_user'),
+                core::setting('core', 'db_password'),
+                core::setting('core', 'db_database'));
 
 // process params
 url::init($_GET['p']);
 
 // load langauge
-lang::init(utils::setting('core', 'lang'));
+lang::init(core::setting('core', 'lang'));
 
 // set page title
-tpl::title(utils::setting('core', 'site_name'));
+tpl::title(core::setting('core', 'site_name'));
 
 // init module system
 module::init();

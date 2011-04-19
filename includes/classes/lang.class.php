@@ -32,7 +32,7 @@ class lang {
         self::$_lang = $lang;
         // check if a cache file exists
         $cacheFile = 'cache/lang_'.$lang.'.ini.php';
-        if (utils::setting('core', 'lang_cache') && file_exists($cacheFile)) {
+        if (core::setting('core', 'lang_cache') && file_exists($cacheFile)) {
             // load all strings from the cache file
             self::$_strings = parse_ini_file($cacheFile);
         } else {
@@ -44,7 +44,7 @@ class lang {
                 self::$_strings[$entry['string']] = $entry['translated'];
             }
             // write to cache if enabled
-            if (utils::setting('core', 'lang_cache'))
+            if (core::setting('core', 'lang_cache'))
                 self::writeCache();
         }
     }

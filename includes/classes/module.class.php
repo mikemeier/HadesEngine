@@ -22,7 +22,7 @@ class module {
         // get page from params
         $module = filter::string(url::param('module'));
         if (!$module)
-            $module = utils::setting('core', 'frontpage');
+            $module = core::setting('core', 'frontpage');
 
         self::$module = $module;
 

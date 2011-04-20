@@ -14,7 +14,7 @@ class pages {
         if(filter::isInt($id)) {
             $id = core::$db->escape($id);
 
-            $result = core::$db->query('SELECT name, url, content FROM {PREFIX}pages WHERE id = ?', array($id));
+            $result = core::$db->query('SELECT name, url, content FROM #PREFIX#pages WHERE id = {0}', array($id));
             $page = core::$db->fetchArray($result);
         } else {
             // get param or use default
@@ -24,7 +24,7 @@ class pages {
                 $url = 'main';
             }
 
-            $result = core::$db->query('SELECT name, url, content FROM {PREFIX}pages WHERE url = ?', array($url));
+            $result = core::$db->query('SELECT name, url, content FROM #PREFIX#pages WHERE url = {0}', array($url));
             $page = core::$db->fetchArray($result);
         }
 

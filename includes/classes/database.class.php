@@ -257,7 +257,7 @@ class database {
     }
 
     /**
-     * Prepares the SQL statement. Replaces '{PREFIX}' with the database prefix and variables ('?') with the corresponding
+     * Prepares the SQL statement. Replaces '#PREFIX#' with the database prefix and '{key}' variables with the corresponding
      *   entries of $vars, if neccessary.
      * @param   string  $query  The SQL query to execute
      * @param   array   $vars   An array of values replacing the variables. Only neccessary if you're using variables.
@@ -265,23 +265,23 @@ class database {
      * @accesss private
      */
     private function _prepareQuery($query, $vars = null) {
-        $query = str_replace('{PREFIX}', 'he' . NR, $query);
+        $query = str_replace('#PREFIX#', 'he'.NR.'_', $query);
         if (is_array($vars)) {
-            foreach ($vars as $var) {
-                if (is_numeric($var)) {
-                    $preparedVar = $var;
-                } elseif (is_bool($var)) {
-                    $preparedVar = (int) $var;
-                } elseif (is_string($var)) {
-                    $var = str_replace('{PREFIX}', 'he'.NR.'_', $var);
-                    $preparedVar = '"' . $this->escape($var) . '"';
-                } elseif (is_array($var)) {
-                    $var = str_replace('{PREFIX}', 'he'.NR.'_', $var);
-                    $preparedVar = '"' . $this->escape(implode(',', $var)) . '"';
+            foreach ($vars as $key => $val) {
+                if (is_numeric($val)) {
+                    $valPrepared = $val;
+                } elseif (is_bool($val)) {
+                    $valPrepared = (int) $val;
+                } elseif (is_string($val)) {
+                    $val = str_replace('#PREFIX#', 'he'.NR.'_', $val);
+                    $valPrepared = '"' . $this->escape($val) . '"';
+                } elseif (is_array($val)) {
+                    $val = str_replace('#PREFIX#', 'he'.NR.'_', $val);
+                    $valPrepared = '"' . $this->escape(implode(',', $val)) . '"';
                 } else {
-                    $preparedVar = '""';
+                    $valPrepared = '""';
                 }
-                $query = str_replace('?', $preparedVar, 1);
+                $query = str_replace('{'.$key.'}', $valPrepared, $query);
             }
         }
         return $query;

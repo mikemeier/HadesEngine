@@ -38,7 +38,7 @@ class lang {
         } else {
             // load all strings from the database
             $sql = 'SELECT s.string, s.translated FROM #PREFIX#lang_strings s, #PREFIX#lang_packs p'
-                 . 'WHERE p.id = s.pack AND p.code = {0}';
+                 . 'WHERE p.id = s.pack AND p.isocode = {0}';
             $result = core::$db->query($sql, array($lang));
             foreach (core::$db->getAll($result) as $entry) {
                 self::$_strings[$entry['string']] = $entry['translated'];

@@ -1,23 +1,4 @@
--- phpMyAdmin SQL Dump
--- version 3.2.0.1
--- http://www.phpmyadmin.net
---
--- Host: localhost
--- Erstellungszeit: 05. April 2011 um 20:11
--- Server Version: 5.1.37
--- PHP-Version: 5.3.0
-
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-
---
--- Datenbank: `hadesengine`
---
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `he1_pages`
---
 
 CREATE TABLE IF NOT EXISTS `he1_pages` (
   `id` int(255) NOT NULL AUTO_INCREMENT,
@@ -26,10 +7,6 @@ CREATE TABLE IF NOT EXISTS `he1_pages` (
   `content` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
-
---
--- Daten für Tabelle `he1_pages`
---
 
 INSERT INTO `he1_pages` (`id`, `name`, `url`, `content`) VALUES
 (1, 'Startseite', 'home', 'Trallala');

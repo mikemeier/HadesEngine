@@ -325,18 +325,62 @@ class htmlform {
             return false;
         }
 
-        // TODO: how to generate field?!
+        // auto add param values if none are given
+        if(isset($params['day'])) {
+            if(!$params['day']['min'] || $params['day']['min'] < 1) {
+                $params['day']['min'] = 1;
+            }
+            if(!$params['day']['max'] || $params['day']['max'] > 31) {
+                $params['day']['max'] = 31;
+            }
+        }
+        if(isset($params['month'])) {
+            if(!$params['month']['min'] || $params['month']['min'] < 1) {
+                $params['month']['min'] = 1;
+            }
+            if(!$params['month']['max'] || $params['month']['max'] > 12) {
+                $params['month']['max'] = 12;
+            }
+        }
 
         if ($this->submitted) {
             $var = $this->method == 'post' ? $_POST[$params['name']] : $_GET[$params['name']];
-            $valid = $this->_validate($var, $params);
+            if($this->method == 'post') {
+                $var['day'] = $_POST[$params['name'].'Day'];
+                $var['month'] = $_POST[$params['name'].'Month'];
+                $var['year'] = $_POST[$params['name'].'Year'];
+            } else {
+                $var['day'] = $_GET[$params['name'].'Day'];
+                $var['month'] = $_GET[$params['name'].'Month'];
+                $var['year'] = $_GET[$params['name'].'Year'];
+            }
+            print_r($var);
+            $valid = true;
+            // validate year
+            if($var['year'] < $params['year']['min'] || $var['year'] > $params['year']['max'] || !isset($var['year'])) {
+                $valid = false;
+            }
+            // validate month
+            if($var['month'] < $params['month']['min'] || $var['month'] > $params['month']['max'] || !isset($var['month'])) {
+                $valid = false;
+            }
+            // validate day
+            if($var['day'] < 1 || $var['day'] > date('t', mktime(0, 0, 0, $var['month'], 1, $var['year'])) || !isset($var['year'])) {
+                $valid = false;
+            }
+
             if (!$valid) {
                 $this->invalid[] = $params['name'];
             }
-            $this->values[$params['name']] = $var;
-            if (!isset($params['value'])) {
-                $params['selected'] = $this->values[$params['name']];
-            }
+            $this->values[$params['name'].'Day'] = $var['day'];
+            $this->values[$params['name'].'Month'] = $var['month'];
+            $this->values[$params['name'].'Year'] = $var['year'];
+            /*$params['name']['day'] = $var['day'];
+            $params['name']['month'] = $var['month'];
+            $params['name']['year'] = $var['year'];*/
+
+
+
         }
 
         return $this->_append('date', $params, isset($valid) ? $valid : true);

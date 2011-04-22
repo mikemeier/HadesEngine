@@ -40,7 +40,7 @@ class lang {
             $sql = 'SELECT s.string, s.translated FROM #PREFIX#lang_strings s, #PREFIX#lang_packs p'
                  . ' WHERE p.id = s.pack AND p.isocode = {0}';
             $result = core::$db->query($sql, array($lang));
-            foreach (core::$db->getAll($result) as $entry) {
+            foreach (core::$db->fetchAll($result) as $entry) {
                 self::$_strings[$entry['string']] = $entry['translated'];
             }
             // write to cache if enabled

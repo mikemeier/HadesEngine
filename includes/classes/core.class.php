@@ -65,7 +65,7 @@ class core {
             } else {
                 return 'main';
             }
-        } elseif($aspect == 'theme') {
+        } elseif ($aspect == 'theme') {
             return self::setting('core', 'theme');
         }
     }

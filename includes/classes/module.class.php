@@ -56,18 +56,18 @@ class module {
         }
 
         // check if action method exists
-        if(!method_exists($module, $action))
+        if (!method_exists($module, $action))
             $action = 'main';
 
         // before action
-        if(method_exists($module, 'before'))
+        if (method_exists($module, 'before'))
             call_user_func(array($module, 'before'), $action);
 
         // call function
         call_user_func_array(array($module, 'action_'.$action), url::paramsAsArray());
 
         // after action
-        if(method_exists($module, 'after'))
+        if (method_exists($module, 'after'))
             call_user_func(array($module, 'after'), $action);
     }
 

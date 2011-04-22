@@ -41,12 +41,12 @@ class utils {
      * @static
      */
     public static function writeArrayToIni($file, $content) {
-        if(is_writeable($file) == true || !file_exists($file)) {
+        if (is_writeable($file) == true || !file_exists($file)) {
             $c = ";<?php die() ?>\n";
-            foreach($content as $item1 => $item2) {
+            foreach ($content as $item1 => $item2) {
                 if (is_array($item2)) {
                     $c = $c.'['.$item1."]\n";
-                    foreach($item2 as $item3 => $item4) {
+                    foreach ($item2 as $item3 => $item4) {
                         $c = $c.$item3.' = '.$item4."\n";
                     }
                 } else {

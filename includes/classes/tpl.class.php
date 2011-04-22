@@ -60,10 +60,11 @@ class tpl {
      */
     public function __construct($tplName, $moduleName = false) {
         $this->_tplName = $tplName;
-        if(!$moduleName)
+        if (!$moduleName) {
             $this->_moduleName = core::current('module');
-        else
+        } else {
             $this->_moduleName = $moduleName;
+        }
     }
 
     /**
@@ -76,12 +77,12 @@ class tpl {
      */
     public function set($name, $value=false) {
         // check if array
-        if(!is_array($name) && $value) {
+        if (!is_array($name) && $value) {
             // assign var to array
             $this->_vars[$name] = $value;
         } else {
             // assign all array vars
-            foreach($name as $name => $value) {
+            foreach ($name as $name => $value) {
                 $this->_vars[$name] = $value;
             }
         }
@@ -96,7 +97,7 @@ class tpl {
         // start output
         ob_start();
         // go through all vars and define them as real ones
-        foreach($this->_vars as $tplVarName => $tplVarValue) {
+        foreach ($this->_vars as $tplVarName => $tplVarValue) {
             $$tplVarName = $tplVarValue;
         }
         // load the template file
@@ -113,7 +114,7 @@ class tpl {
      * @static
      */
     public static function title($title = false) {
-        if($title) {
+        if ($title) {
             return self::$_pageTitle = $title.self::$_pageTitle;
         } else {
             return self::$_pageTitle;
@@ -165,7 +166,7 @@ class tpl {
      * @static
      */
     public static function printJS() {
-        foreach(self::$_js as $entry) {
+        foreach (self::$_js as $entry) {
             echo '<script type="text/javascript" src="/modules/'.$entry[0].'/js/'.$entry[1].'.js"></script>'."\n";
         }
     }
@@ -195,7 +196,7 @@ class tpl {
      * @static
      */
     public static function printCSS() {
-        foreach(self::$_js as $entry) {
+        foreach (self::$_js as $entry) {
             echo '<link rel="stylesheet" type="text/css" media="'.$entry[2].'" src="/modules/'.$entry[0].'/css/'.$entry[1].'.css" />'."\n";
         }
     }

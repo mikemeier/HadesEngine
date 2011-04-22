@@ -41,7 +41,7 @@ class url {
     public static function param($name) {
         // serach for key of the param name
         $param = array_search($name, self::$_params);
-        if(is_int($param)) {
+        if (is_int($param)) {
             // key plus one is the value of this param
             $key = $param + 1;
             return self::$_params[$key];
@@ -63,8 +63,8 @@ class url {
         // create returning array without param names
         $isParamName = true;
         $final = array();
-        foreach($tmp as $name) {
-            if(!$isParamName) {
+        foreach ($tmp as $name) {
+            if (!$isParamName) {
                 $final[] = $name;
                 // set var to skip the next item
                 $isParamName = true;

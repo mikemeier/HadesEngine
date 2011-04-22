@@ -365,7 +365,7 @@ class htmlform {
                 $valid = false;
             }
             // validate day
-            if($var['day'] < 1 || $var['day'] > date('t', mktime(0, 0, 0, $var['month'], 1, $var['year'])) || !isset($var['year'])) {
+            if($var['day'] < 1 || $var['day'] > date('t', mktime(0, 0, 0, $var['month'], 1, $var['year'])) || !isset($var['day'])) {
                 $valid = false;
             }
 

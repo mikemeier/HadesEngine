@@ -326,32 +326,28 @@ class htmlform {
         }
 
         // auto add param values if none are given
-        if (isset($params['day'])) {
-            if (!$params['min_day'] || $params['min_day'] < 1) {
-                $params['min_day'] = 1;
-            }
-            if (!$params['max_day'] || $params['max_day'] > 31) {
-                $params['max_day'] = 31;
-            }
+        if (!$params['min_day'] || $params['min_day'] < 1) {
+            $params['min_day'] = 1;
         }
-        if (isset($params['month'])) {
-            if (!$params['min_month'] || $params['min_month'] < 1) {
-                $params['min_month'] = 1;
-            }
-            if (!$params['max_month'] || $params['max_month'] > 12) {
-                $params['max_month'] = 12;
-            }
+        if (!$params['max_day'] || $params['max_day'] > 31) {
+            $params['max_day'] = 31;
+        }
+        if (!$params['min_month'] || $params['min_month'] < 1) {
+            $params['min_month'] = 1;
+        }
+        if (!$params['max_month'] || $params['max_month'] > 12) {
+            $params['max_month'] = 12;
         }
 
         if ($this->submitted) {
             if ($this->method == 'post') {
-                $var['day'] = $_POST[$params['name'].'Day'];
-                $var['month'] = $_POST[$params['name'].'Month'];
-                $var['year'] = $_POST[$params['name'].'Year'];
+                $day = $_POST[$params['name'].'Day'];
+                $month = $_POST[$params['name'].'Month'];
+                $year = $_POST[$params['name'].'Year'];
             } else {
-                $var['day'] = $_GET[$params['name'].'Day'];
-                $var['month'] = $_GET[$params['name'].'Month'];
-                $var['year'] = $_GET[$params['name'].'Year'];
+                $day = $_GET[$params['name'].'Day'];
+                $month = $_GET[$params['name'].'Month'];
+                $year = $_GET[$params['name'].'Year'];
             }
             
             // debugging
@@ -359,15 +355,15 @@ class htmlform {
             
             $valid = true;
             // validate year
-            if ($var['year'] < $params['min_year'] || $var['year'] > $params['max_year'] || !isset($var['year'])) {
+            if ($year < $params['min_year'] || $year > $params['max_year'] || !isset($year)) {
                 $valid = false;
             }
             // validate month
-            if ($var['month'] < $params['min_month'] || $var['month'] > $params['max_month'] || !isset($var['month'])) {
+            if ($month < $params['min_month'] || $month > $params['max_month'] || !isset($month)) {
                 $valid = false;
             }
             // validate day
-            if ($var['day'] < 1 || $var['day'] > date('t', mktime(0, 0, 0, $var['month'], 1, $var['year'])) || !isset($var['day'])) {
+            if ($day < 1 || $day > date('t', mktime(0, 0, 0, $month, 1, $year)) || !isset($day)) {
                 $valid = false;
             }
 
@@ -375,12 +371,13 @@ class htmlform {
                 $this->invalid[] = $params['name'];
             }
             
-            $this->values[$params['name'].'Day'] = $var['day'];
-            $this->values[$params['name'].'Month'] = $var['month'];
-            $this->values[$params['name'].'Year'] = $var['year'];
-            /*$params['name']['day'] = $var['day'];
-            $params['name']['month'] = $var['month'];
-            $params['name']['year'] = $var['year'];*/
+            $this->values[$params['name']]['day'] = $day;
+            $this->values[$params['name']]['month'] = $month;
+            $this->values[$params['name']]['year'] = $year;
+            
+            $params['day'] = $day;
+            $params['month'] = $month;
+            $params['year'] = $year;
         }
 
         return $this->_append('date', $params, isset($valid) ? $valid : true);

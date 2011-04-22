@@ -117,8 +117,8 @@
         <input type="<?php if ($button['submit']): ?>submit<?php elseif ($button['reset']): ?>reset<?php else: ?>button<?php endif; ?>" value="<?php echo $button['caption'] ?>" class="<?php echo ($button['class'] ? $button['class'] : 'button') ?>"<?php echo $button['attributes'] ?> />
 <?php endforeach; ?>
 <?php else: ?>
-        <input type="submit" value="Submit" class="button" />
-        <input type="reset" value="Reset" class="button" />
+        <input type="submit" value="<?php echo lang::get('Submit') ?>" class="button" />
+        <input type="reset" value="<?php echo lang::get('Reset') ?>" class="button" />
 <?php endif; ?>
     </div>
 </form>

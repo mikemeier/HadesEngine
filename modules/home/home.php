@@ -8,7 +8,7 @@ class home {
         /*$tpl = new tpl('home');
         echo $tpl->parse();*/
         $form = new htmlform('test');
-        $form->addDateSelect(array('name' => 'test', 'day' => array(), 'month' => array(), 'year' => array('min' => 1900, 'max' => 2011)));
+        $form->addDateSelect(array('name' => 'test', 'min_year' => 1900, 'max_year' => 2011));
         $form->addTextArea(array('name' => 'desc'));
         echo $form->build();
     }

@@ -326,26 +326,25 @@ class htmlform {
         }
 
         // auto add param values if none are given
-        if(isset($params['day'])) {
-            if(!$params['day']['min'] || $params['day']['min'] < 1) {
-                $params['day']['min'] = 1;
+        if (isset($params['day'])) {
+            if (!$params['min_day'] || $params['min_day'] < 1) {
+                $params['min_day'] = 1;
             }
-            if(!$params['day']['max'] || $params['day']['max'] > 31) {
-                $params['day']['max'] = 31;
+            if (!$params['max_day'] || $params['max_day'] > 31) {
+                $params['max_day'] = 31;
             }
         }
-        if(isset($params['month'])) {
-            if(!$params['month']['min'] || $params['month']['min'] < 1) {
-                $params['month']['min'] = 1;
+        if (isset($params['month'])) {
+            if (!$params['min_month'] || $params['min_month'] < 1) {
+                $params['min_month'] = 1;
             }
-            if(!$params['month']['max'] || $params['month']['max'] > 12) {
-                $params['month']['max'] = 12;
+            if (!$params['max_month'] || $params['max_month'] > 12) {
+                $params['max_month'] = 12;
             }
         }
 
         if ($this->submitted) {
-            $var = $this->method == 'post' ? $_POST[$params['name']] : $_GET[$params['name']];
-            if($this->method == 'post') {
+            if ($this->method == 'post') {
                 $var['day'] = $_POST[$params['name'].'Day'];
                 $var['month'] = $_POST[$params['name'].'Month'];
                 $var['year'] = $_POST[$params['name'].'Year'];
@@ -354,33 +353,34 @@ class htmlform {
                 $var['month'] = $_GET[$params['name'].'Month'];
                 $var['year'] = $_GET[$params['name'].'Year'];
             }
+            
+            // debugging
             print_r($var);
+            
             $valid = true;
             // validate year
-            if($var['year'] < $params['year']['min'] || $var['year'] > $params['year']['max'] || !isset($var['year'])) {
+            if ($var['year'] < $params['min_year'] || $var['year'] > $params['max_year'] || !isset($var['year'])) {
                 $valid = false;
             }
             // validate month
-            if($var['month'] < $params['month']['min'] || $var['month'] > $params['month']['max'] || !isset($var['month'])) {
+            if ($var['month'] < $params['min_month'] || $var['month'] > $params['max_month'] || !isset($var['month'])) {
                 $valid = false;
             }
             // validate day
-            if($var['day'] < 1 || $var['day'] > date('t', mktime(0, 0, 0, $var['month'], 1, $var['year'])) || !isset($var['day'])) {
+            if ($var['day'] < 1 || $var['day'] > date('t', mktime(0, 0, 0, $var['month'], 1, $var['year'])) || !isset($var['day'])) {
                 $valid = false;
             }
 
             if (!$valid) {
                 $this->invalid[] = $params['name'];
             }
+            
             $this->values[$params['name'].'Day'] = $var['day'];
             $this->values[$params['name'].'Month'] = $var['month'];
             $this->values[$params['name'].'Year'] = $var['year'];
             /*$params['name']['day'] = $var['day'];
             $params['name']['month'] = $var['month'];
             $params['name']['year'] = $var['year'];*/
-
-
-
         }
 
         return $this->_append('date', $params, isset($valid) ? $valid : true);
@@ -428,7 +428,6 @@ class htmlform {
         $captchaCharacters = isset($params['captcha_characters']) ? $params['captcha_characters'] : 'abcdefghijlmnpqrstuvwyzABCDEFGHIJLMNPQRSTUVWYZ123456789';
         $imageWidth = isset($params['image_width']) ? $params['image_width'] : 170;
         $imageHeight = isset($params['image_height']) ? $params['image_height'] : 60;
-        // TODO: where do we save the files?
         $fontsDir = isset($params['fonts_dir']) ? $params['fonts_dir'] : HADES_DIR_ROOT . 'files/fonts/';
         $fontsList = is_array($params['fonts_list']) ? $params['fonts_list'] : array('xfiles.ttf', 'dinstik.ttf', 'hisverd.ttf');
 
@@ -484,7 +483,7 @@ class htmlform {
             $valid = false;
             $var = $this->method == 'post' ? $_POST[$params['name']] : $_GET[$params['name']];
             $hash = $this->method == 'post' ? $_POST[$params['name'].'_hash'] : $_GET[$params['name'].'_hash'];
-            if(hash('sha256', $var) == $hash) {
+            if (hash('sha256', $var) == $hash) {
                 $valid = true;
             }
             if (!$params['valid'] || !$valid) {

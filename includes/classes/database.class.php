@@ -134,6 +134,21 @@ class database {
     }
 
     /**
+     * Parses and executes a SQL dump file.
+     * @param   string  $file  The path to the dump file
+     * @param   array   $vars  An array of values replacing the variables. Only neccessary if you're using variables.
+     * @return  bool
+     * @access  public
+     */
+    public function execDump($file, $vars = null) {
+        $dumpContent = file_get_contents($file);
+        $queries = preg_split('/;\s*$/', $dumpContent);
+        foreach($queries as $query) {
+            $this->query($query, $vars);
+        }
+    }
+
+    /**
      * Gets a result row as an enumerated array. Returns a numerical array that corresponds to the fetched row and moves
      *   the internal data pointer ahead.
      * @param   resrc    $result    The result resource that is being evaluated

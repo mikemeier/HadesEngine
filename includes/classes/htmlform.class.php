@@ -326,17 +326,23 @@ class htmlform {
         }
 
         // auto add param values if none are given
-        if (!$params['min_day'] || $params['min_day'] < 1) {
+        if (!isSet($params['min_day']) || $params['min_day'] < 1) {
             $params['min_day'] = 1;
         }
-        if (!$params['max_day'] || $params['max_day'] > 31) {
+        if (!isSet($params['max_day']) || $params['max_day'] > 31) {
             $params['max_day'] = 31;
         }
-        if (!$params['min_month'] || $params['min_month'] < 1) {
+        if (!isSet($params['min_month']) || $params['min_month'] < 1) {
             $params['min_month'] = 1;
         }
-        if (!$params['max_month'] || $params['max_month'] > 12) {
+        if (!isSet($params['max_month']) || $params['max_month'] > 12) {
             $params['max_month'] = 12;
+        }
+        if (!isSet($params['min_year'])) {
+            $params['min_year'] = date('Y')-70;
+        }
+        if (!isSet($params['max_year']) || $params['max_year'] < $params['min_year']) {
+            $params['max_year'] = date('Y');
         }
 
         if ($this->submitted) {

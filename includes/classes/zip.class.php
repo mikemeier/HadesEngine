@@ -30,12 +30,12 @@ class zip {
 	 * Extracts the complete archive or the given files to the specified destination. Returns TRUE on success or FALSE on
 	 *   failure.
      * @param   string  $dest    Location where to extract the files
-     * @param   mixed   $params  The entries to extract. It accepts either a single entry name or an array of names.
+     * @param   mixed   $files   The files to extract. It accepts either a single file name or an array of names.
 	 * @return  bool
 	 * @access  public
 	 */
-    public function extract($dest, $entries = null) {
-        return $this->_zip->extractTo($dest, $entries);
+    public function extract($dest, $files = null) {
+        return $this->_zip->extractTo($dest, $files);
     }
 
     /**

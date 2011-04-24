@@ -2,7 +2,7 @@
 /**
  * The core class provides basic functionality and all globally available objects
  *
- * @author Christian Neff <christian.neff@gmail.com>
+ * @author  Christian Neff <christian.neff@gmail.com>
  */
 class core {
 

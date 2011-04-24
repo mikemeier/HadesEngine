@@ -1,9 +1,9 @@
 <?php
 /**
-* This class extracts or creates ZIP archives
-*
-* @author Christian Neff <christian.neff@gmail.com>
-*/
+ * This class extracts or creates ZIP archives
+ *
+ * @author  Christian Neff <christian.neff@gmail.com>
+ */
 class zip {
 
     /**

@@ -2,7 +2,7 @@
 /**
  * This class allows you to execute operations in a MySQL database.
  *
- * @author Christian Neff <christian.neff@gmail.com>
+ * @author  Christian Neff <christian.neff@gmail.com>
  */
 class database {
 
@@ -144,6 +144,9 @@ class database {
         $dumpContent = file_get_contents($file);
         $queries = preg_split('/;\s*$/', $dumpContent);
         foreach($queries as $query) {
+            $query = trim($query);
+            if ($query == '' || substr($query, 0, 2) == '--')
+                continue;
             $this->query($query, $vars);
         }
     }
@@ -153,6 +156,7 @@ class database {
      *   the internal data pointer ahead.
      * @param   resrc    $result    The result resource that is being evaluated
      * @return  array
+     * @access  public
      */
     public function fetchRow($result) {
         return mysql_fetch_row($result);
@@ -249,7 +253,7 @@ class database {
      * @return  bool
      * @access  public
      */
-    public function free_result($result) {
+    public function freeResult($result) {
         return mysql_free_result($result);
     }
 
@@ -288,10 +292,8 @@ class database {
                 } elseif (is_bool($val)) {
                     $valPrepared = (int) $val;
                 } elseif (is_string($val)) {
-                    $val = str_replace('#PREFIX#', 'he'.NR.'_', $val);
                     $valPrepared = '"' . $this->escape($val) . '"';
                 } elseif (is_array($val)) {
-                    $val = str_replace('#PREFIX#', 'he'.NR.'_', $val);
                     $valPrepared = '"' . $this->escape(implode(',', $val)) . '"';
                 } else {
                     $valPrepared = '""';

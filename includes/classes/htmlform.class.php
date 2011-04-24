@@ -2,7 +2,7 @@
 /**
  * Class for generating and validating HTML forms
  *
- * @author Christian Neff <christian.neff@gmail.com>
+ * @author  Christian Neff <christian.neff@gmail.com>
  */
 class htmlform {
 

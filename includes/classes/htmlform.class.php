@@ -64,8 +64,8 @@ class htmlform {
 
     /**
      * The class constructor
-     * @param   string  $name  The form's name, used as id attribute. Also needed if there are multiple forms on a
-     *                           single page.
+     * @param   string  $name  The form's name, used as id attribute. Also needed if there are multiple forms
+     *                           on a single page.
      * @return  void
      * @access  public
      */
@@ -514,15 +514,17 @@ class htmlform {
      * Validates a variable by given options
      * @param   mixed    $var      The variable to validate
      * @param   array    $options  A list of one or more of the following options as an array:
-     *                               equal - value must be equal to x
-     *                               not_equal - value must not be equal to x
-     *                               min_range - value must be greater than or equal to n
-     *                               max_range - value must be lower than or equal to n
-     *                               min_length - value's length must be at least n characters
-     *                               max_length - value's length must not be greater than n characters
-     *                               scheme - value must match this scheme, possible: 'email', 'url', 'ip', 'regex'
-     *                               regex_pattern - value must match this regular expression, only if scheme = 'regex'
-     * @return  boolean
+     *                               - equal          The value must be equal to x
+     *                               - not_equal      The value must not be equal to x
+     *                               - min_range      The value must be greater than or equal to n
+     *                               - max_range      The value must be lower than or equal to n
+     *                               - min_length     The value's length must be at least n characters
+     *                               - max_length     The value's length must not be greater than n characters
+     *                               - scheme         The value must match this scheme. Possible values are
+     *                                                  'email', 'url', 'ip' or 'regex'.
+     *                               - regex_pattern  The value must match this regular expression. This option
+     *                                                  is only availabe if 'scheme' is set to 'regex'.
+     * @return  bool
      * @access  private
      */
     private function _validate(&$var, $options = array()) {

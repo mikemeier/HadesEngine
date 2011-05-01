@@ -103,7 +103,7 @@
     <div class="field<?php if (!$input['valid']): ?> error<?php endif; ?>">
         <?php if ($input['params']['title']): ?><label for="<?php echo $input['params']['name'] ?>"><?php echo $input['params']['title']; if ($input['params']['required'] || $input['params']['min_length'] || $input['params']['min_range']): ?> <em class="required">*</em><?php endif; ?></label><?php endif; ?>
         <div class="captcha">
-          <img src="data:image/jpeg;base64,{$input.params.captcha|base64_encode}" alt="" style="display: block;" />
+          <img src="data:image/jpeg;base64,<?php echo base64_encode($input['params']['captcha'] ?>" alt="" style="display: block;" />
           <input type="text" name="<?php echo $input['params']['name'] ?>" id="<?php echo $input['params']['name'] ?>"<?php if ($input['params']['size']): ?> size="<?php echo $input['params']['size'] ?>"<?php endif; if ($input['params']['maxlength']): ?> maxlength="<?php echo $input['params']['maxlength'] ?>"<?php endif; if ($input['params']['class']): ?> class="<?php echo $input['params']['class'] ?>"<?php endif; if ($input['params']['style']): ?> style="<?php echo $input['params']['style'] ?>"<?php endif; ?> /><?php if ($input['params']['note']): ?><a class="help" rel="tooltip" href="javascript:;" title="<?php echo $input['params']['note'] ?>"></a><?php endif; ?>
         </div>
         <?php if ($input['params']['description']): ?><span class="description"><?php echo $input['params']['description'] ?></span><?php endif; ?>

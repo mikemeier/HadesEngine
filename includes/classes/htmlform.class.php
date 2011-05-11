@@ -260,12 +260,10 @@ class htmlform {
             return false;
         }
 
-        if (!$this->_checkExists('MAX_FILE_SIZE')) {
-            $this->addHidden(array(
-                'name' => 'MAX_FILE_SIZE',
-                'value' => (isset($params['max_file_size']) ? $params['max_file_size'] : 30000)
-            ));
-        }
+        $this->addHidden(array(
+            'name' => 'MAX_FILE_SIZE',
+            'value' => (isset($params['maxFileSize']) ? $params['maxFileSize'] : 30000)
+        ));
 
         if ($this->submitted) {
             if (isset($_FILES[$params['name']])) {
@@ -316,7 +314,13 @@ class htmlform {
 
     /**
      * Adds a date select field to the stack
-     * @param   array   $params  The parameters of the input field
+     * @param   array   $params  The parameters of the input field. Additional parameters for this type are:
+     *                             - minDay      List of days starts at day n
+     *                             - maxDay      List of days ends at day n
+     *                             - minMonth    List of months starts at month n
+     *                             - maxMonth    List of months ends at month n
+     *                             - minYear     List of years starts at year n
+     *                             - maxYear     List of years ends at year n
      * @return  bool
      * @access  public
      */
@@ -326,23 +330,23 @@ class htmlform {
         }
 
         // auto add param values if none are given
-        if (!isSet($params['min_day']) || $params['min_day'] < 1) {
-            $params['min_day'] = 1;
+        if (!isSet($params['minDay']) || $params['minDay'] < 1) {
+            $params['minDay'] = 1;
         }
-        if (!isSet($params['max_day']) || $params['max_day'] > 31) {
-            $params['max_day'] = 31;
+        if (!isSet($params['maxDay']) || $params['maxDay'] > 31) {
+            $params['maxDay'] = 31;
         }
-        if (!isSet($params['min_month']) || $params['min_month'] < 1) {
-            $params['min_month'] = 1;
+        if (!isSet($params['minMonth']) || $params['minMonth'] < 1) {
+            $params['minMonth'] = 1;
         }
-        if (!isSet($params['max_month']) || $params['max_month'] > 12) {
-            $params['max_month'] = 12;
+        if (!isSet($params['maxMonth']) || $params['maxMonth'] > 12) {
+            $params['maxMonth'] = 12;
         }
-        if (!isSet($params['min_year'])) {
-            $params['min_year'] = date('Y')-70;
+        if (!isSet($params['minYear']) || $params['maxYear'] < $params['minYear']) {
+            $params['minYear'] = date('Y')-70;
         }
-        if (!isSet($params['max_year']) || $params['max_year'] < $params['min_year']) {
-            $params['max_year'] = date('Y');
+        if (!isSet($params['maxYear']) || $params['maxYear'] < $params['minYear']) {
+            $params['maxYear'] = date('Y');
         }
 
         if ($this->submitted) {
@@ -361,11 +365,11 @@ class htmlform {
             
             $valid = true;
             // validate year
-            if ($year < $params['min_year'] || $year > $params['max_year'] || !isset($year)) {
+            if ($year < $params['minYear'] || $year > $params['maxYear'] || !isset($year)) {
                 $valid = false;
             }
             // validate month
-            if ($month < $params['min_month'] || $month > $params['max_month'] || !isset($month)) {
+            if ($month < $params['minMonth'] || $month > $params['maxMonth'] || !isset($month)) {
                 $valid = false;
             }
             // validate day
@@ -417,7 +421,14 @@ class htmlform {
 
     /**
      * Adds a captcha to the stack
-     * @param   array   $params  The parameters of the input field
+     * @param   array   $params  The parameters of the input field. Additional parameters for this type are:
+     *                             - captchaLength    The number of characters on the captcha picture
+     *                             - captchaFontSize  The font size of the characters
+     *                             - captchaCharList  List of characters to use for the captcha
+     *                             - imageWidth       The width of the captcha picture
+     *                             - imageHeight      The height of the captcha picture
+     *                             - fontsDir         The directory where the used fonts are stored
+     *                             - fontsList        List of fonts to use for the captcha
      * @return  bool
      * @access  public
      */
@@ -426,15 +437,17 @@ class htmlform {
             return false;
         }
 
-        $captchaLength = isset($params['captcha_length']) ? $params['captcha_length'] : 5;
-        $captchaFontsize = isset($params['captcha_fontsize']) ? $params['captcha_fontsize'] : 18;
-        $captchaCharacters = isset($params['captcha_characters']) ? $params['captcha_characters'] : 'abcdefghijlmnpqrstuvwyzABCDEFGHIJLMNPQRSTUVWYZ123456789';
-        $imageWidth = isset($params['image_width']) ? $params['image_width'] : 170;
-        $imageHeight = isset($params['image_height']) ? $params['image_height'] : 60;
-        $fontsDir = isset($params['fonts_dir']) ? $params['fonts_dir'] : HADES_DIR_ROOT . 'files/fonts/';
-        $fontsList = is_array($params['fonts_list']) ? $params['fonts_list'] : array('xfiles.ttf', 'dinstik.ttf', 'hisverd.ttf');
+        $captchaLength = isset($params['captchaLength']) ? $params['captchaLength'] : 5;
+        $captchaFontsize = isset($params['captchaFontSize']) ? $params['captchaFontSize'] : 18;
+        $captchaCharacters = isset($params['captchaCharList']) ? $params['captchaCharList'] : 'abcdefghijlmnpqrstuvwyzABCDEFGHIJLMNPQRSTUVWYZ123456789';
+        $imageWidth = isset($params['imageWidth']) ? $params['imageWidth'] : 170;
+        $imageHeight = isset($params['imageHeight']) ? $params['imageHeight'] : 60;
+        $fontsDir = isset($params['fontsDir']) ? $params['fontsDir'] : HADES_DIR_ROOT . 'files/fonts/';
+        $fontsList = is_array($params['fontsList']) ? $params['fontsList'] : array('xfiles.ttf', 'dinstik.ttf', 'hisverd.ttf');
 
-        $params['maxlength'] = $captchaLength;
+        if ($params['maxlength'] < $captchaLength) {
+            $params['maxlength'] = $captchaLength;
+        }
 
         $img = imageCreateTrueColor($imageWidth, $imageHeight);
 
@@ -514,16 +527,16 @@ class htmlform {
      * Validates a variable by given options
      * @param   mixed    $var      The variable to validate
      * @param   array    $options  A list of one or more of the following options as an array:
-     *                               - equal          The value must be equal to x
-     *                               - not_equal      The value must not be equal to x
-     *                               - min_range      The value must be greater than or equal to n
-     *                               - max_range      The value must be lower than or equal to n
-     *                               - min_length     The value's length must be at least n characters
-     *                               - max_length     The value's length must not be greater than n characters
-     *                               - scheme         The value must match this scheme. Possible values are
-     *                                                  'email', 'url', 'ip' or 'regex'.
-     *                               - regex_pattern  The value must match this regular expression. This option
-     *                                                  is only availabe if 'scheme' is set to 'regex'.
+     *                               - equal         The value must be equal to x
+     *                               - notEqual      The value must not be equal to x
+     *                               - minRange      The value must be greater than or equal to n
+     *                               - maxRange      The value must be lower than or equal to n
+     *                               - minLength     The value's length must be at least n characters
+     *                               - maxLength     The value's length must not be greater than n characters
+     *                               - scheme        The value must match this scheme. Possible values are
+     *                                                 'email', 'url', 'ip' or 'regex'.
+     *                               - matchPattern  The value must match this regular expression. This option
+     *                                                 is only availabe if 'scheme' is set to 'regex'.
      * @return  bool
      * @access  private
      */
@@ -535,19 +548,19 @@ class htmlform {
             if ($options['required'] && $var == '') {
                 $valGood = false;
             }
-            if (isset($options['not_equal']) && $var == $options['not_equal']) {
+            if (isset($options['notEqual']) && $var == $options['notEqual']) {
                 $valGood = false;
             }
-            if (isset($options['min_range']) && $var < $options['min_range']) {
+            if (isset($options['minRange']) && $var < $options['minRange']) {
                 $valGood = false;
             }
-            if (isset($options['max_range']) && $var > $options['max_range']) {
+            if (isset($options['maxRange']) && $var > $options['maxRange']) {
                 $valGood = false;
             }
-            if (isset($options['min_length']) && strlen($var) < $options['min_length']) {
+            if (isset($options['minLength']) && strlen($var) < $options['minLength']) {
                 $valGood = false;
             }
-            if (isset($options['max_length']) && strlen($var) > $options['max_length']) {
+            if (isset($options['maxLength']) && strlen($var) > $options['maxLength']) {
                 $valGood = false;
             }
             if (isset($options['scheme']) && is_string($var)) {
@@ -557,8 +570,8 @@ class htmlform {
                     $valid = filter::isURL($var);
                 } elseif ($options['scheme'] == 'ip') {
                     $valid = filter::isIP($var);
-                } elseif ($options['scheme'] == 'regex' && isset($options['regex_pattern'])) {
-                    $valid = filter::matchesRegex($var, $options['regex_pattern']);
+                } elseif ($options['scheme'] == 'regex' && isset($options['matchPattern'])) {
+                    $valid = filter::matchesRegex($var, $options['matchPattern']);
                 }
                 if ($valid === false) {
                     $valGood = false;

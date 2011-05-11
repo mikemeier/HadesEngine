@@ -68,21 +68,21 @@
         <?php if ($input['params']['title']): ?><label><?php echo $input['params']['title']; if ($input['params']['required'] || $input['params']['min_length'] || $input['params']['min_range']): ?> <em class="required">*</em><?php endif; ?></label><?php endif; ?>
         <?php if(isset($input['params']['day'])): ?>
             <select name="<?php echo $input['params']['name'] ?>Day">
-                <?php for($i = $input['params']['min_day']; $i <= $input['params']['max_day']; $i++): ?>
+                <?php for($i = $input['params']['minDay']; $i <= $input['params']['maxDay']; $i++): ?>
                 <option value="<?php echo $i ?>" <?php if($i == $input['params']['day']): ?>selected="selected"<?php endif; ?>><?php echo $i ?></option>
                 <?php endfor; ?>
             </select>
         <?php endif; ?>
         <?php if(isset($input['params']['month'])): ?>
             <select name="<?php echo $input['params']['name'] ?>Month">
-                <?php for($i = $input['params']['min_month']; $i <= $input['params']['max_month']; $i++): ?>
+                <?php for($i = $input['params']['minMonth']; $i <= $input['params']['maxMonth']; $i++): ?>
                 <option value="<?php echo $i ?>" <?php if($i == $input['params']['month']): ?>selected="selected"<?php endif; ?>><?php echo $i ?></option>
                 <?php endfor; ?>
             </select>
         <?php endif; ?>
         <?php if(isset($input['params']['year'])): ?>
             <select name="<?php echo $input['params']['name'] ?>Day">
-                <?php for($i = $input['params']['min_year']; $i <= $input['params']['max_year']; $i++): ?>
+                <?php for($i = $input['params']['minYear']; $i <= $input['params']['max_year']; $i++): ?>
                 <option value="<?php echo $i ?>" <?php if($i == $input['params']['year']): ?>selected="selected"<?php endif; ?>><?php echo $i ?></option>
                 <?php endfor; ?>
             </select>

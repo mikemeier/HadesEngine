@@ -8,8 +8,9 @@
 // start session
 session_start();
 
-// load classAutoLoader
+// include required files
 require_once 'classAutoLoader.php';
+require_once 'functions.php';
 
 // load settings
 core::loadSettings();

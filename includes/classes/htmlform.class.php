@@ -74,8 +74,9 @@ class htmlform {
             $this->name = $name;
 
         $submitID = (isset($this->name) ? md5($this->name) : 1);
-        if (($this->method == 'post' ? $_POST['submit'] : $_GET['submit']) == $submitID)
+        if (($this->method == 'post' ? $_POST['submit'] : $_GET['submit']) == $submitID) {
             $this->submitted = true;
+        }
     }
 
     /**
@@ -96,13 +97,11 @@ class htmlform {
      * @access  public
      */
     public function build($output = false) {
-        $formSettings['name'] = $this->name;
-        $formSettings['action'] = $this->action !== null ? $this->action : utils::makeURL();
-        $formSettings['method'] = $this->method;
-        $formSettings['buttons'] = $this->buttons;
-
         $tpl = new tpl('form', 'core');
-        $tpl->set('settings', $formSettings);
+        $tpl->set('name', $this->name);
+        $tpl->set('action', $this->action !== null ? $this->action : utils::makeURL());
+        $tpl->set('method', $this->method);
+        $tpl->set('buttons', $this->buttons);
         $tpl->set('stack', $this->_stack);
         if (!$output) {
             return $tpl->parse();
@@ -113,207 +112,254 @@ class htmlform {
 
     /**
      * Adds a hidden field to the stack
+     * @param   string  $name    The name of the input field
+     * @param   string  $value   The value of the input field
      * @param   array   $params  The parameters of the input field
      * @return  bool
      * @access  public
      */
-    public function addHidden(array $params) {
-        if (!isset($params['name'])) {
+    public function addHidden($name, $value = '', $params = array()) {
+        if ($this->fieldExists($name) || empty($name)) {
             return false;
         }
-
+        
         if ($this->submitted) {
-            $var = $this->method == 'post' ? $_POST[$params['name']] : $_GET[$params['name']];
+            $var = $this->method == 'post' ? $_POST[$name] : $_GET[$name];
             $valid = $this->_validate($var, $params);
             if (!$valid) {
-                $this->invalid[] = $params['name'];
+                $this->invalid[] = $name;
             }
-            $this->values[$params['name']] = $var;
-            if (!isset($params['value'])) {
-                $params['value'] = $this->values[$params['name']];
-            }
+            $this->values[$name] = $var;
+            $value = $this->values[$name];
         }
 
-        return $this->_append('hidden', $params, isset($valid) ? $valid : true);
+        $this->_stack[$name] = array(
+            'type'   => 'hidden',
+            'name'   => $name,
+            'value'  => $value,
+            'params' => $params,
+            'valid'  => isset($valid) ? $valid : true
+        );
     }
 
     /**
      * Adds radiobuttons to the stack
-     * @param   array   $params  The parameters of the input field
+     * @param   string  $name     The name of the input field
+     * @param   array   $options  An array of options in the form:
+     *                              {{<value>, <caption>}, ...}
+     * @param   array   $params   The parameters of the input field
      * @return  bool
      * @access  public
      */
-    public function addRadioButtons(array $params) {
-        if (!isset($params['name'])) {
+    public function addRadioButtons($name, $options, $params = array()) {
+        if ($this->fieldExists($name) || empty($name)) {
             return false;
         }
-
+        if (!is_array($options) || empty($options)) {
+            return false;
+        }
+        
         if ($this->submitted) {
-            $var = $this->method == 'post' ? $_POST[$params['name']] : $_GET[$params['name']];
+            $var = $this->method == 'post' ? $_POST[$name] : $_GET[$name];
             $valid = $this->_validate($var, $params);
             if (!$valid) {
-                $this->invalid[] = $params['name'];
+                $this->invalid[] = $name;
             }
-            $this->values[$params['name']] = $var;
-            if (!isset($params['value'])) {
-                $params['selected'] = $this->values[$params['name']];
-            }
+            $this->values[$name] = $var;
+            $params['selected'] = $this->values[$name];
         }
 
-        if (!isset($params['options']) || !is_array($params['options'])) {
-            return false;
-        }
-
-        return $this->_append('radiobuttons', $params, isset($valid) ? $valid : true);
+        $this->_stack[$name] = array(
+            'type'    => 'radiobuttons',
+            'name'    => $name,
+            'options' => $options,
+            'params'  => $params,
+            'valid'   => isset($valid) ? $valid : true
+        );
     }
 
     /**
      * Adds a checkbox to the stack
+     * @param   string  $name    The name of the input field
+     * @param   string  $value   The value of the input field
      * @param   array   $params  The parameters of the input field
      * @return  bool
      * @access  public
      */
-    public function addCheckBox(array $params) {
-        if (!isset($params['name'])) {
+    public function addCheckBox($name, $value = '', $params = array()) {
+        if ($this->fieldExists($name) || empty($name)) {
             return false;
         }
-
+        
         if ($this->submitted) {
-            $var = $this->method == 'post' ? $_POST[$params['name']] : $_GET[$params['name']];
+            $var = $this->method == 'post' ? $_POST[$name] : $_GET[$name];
             $valid = $this->_validate($var, $params);
             if (!$valid) {
-                $this->invalid[] = $params['name'];
+                $this->invalid[] = $name;
             }
-            $this->values[$params['name']] = $var;
-            if (!isset($params['checked']) && $this->values[$params['name']] == $params['value']) {
+            $this->values[$name] = $var;
+            if ($this->values[$name] == $value) {
                 $params['checked'] = true;
             }
         }
 
-        return $this->_append('checkbox', $params, isset($valid) ? $valid : true);
+        $this->_stack[$name] = array(
+            'type'   => 'checkbox',
+            'name'   => $name,
+            'value'  => $value,
+            'params' => $params,
+            'valid'  => isset($valid) ? $valid : true
+        );
     }
 
     /**
      * Adds checkboxes to the stack
-     * @param   array   $params  The parameters of the input field
+     * @param   string  $name     The name of the input field
+     * @param   array   $options  An array of options in the form:
+     *                              {{<value>, <caption>}, ...}
+     * @param   array   $params   The parameters of the input field
      * @return  bool
      * @access  public
      */
-    public function addCheckBoxes(array $params) {
-        if (!isset($params['name'])) {
+    public function addCheckBoxes($name, $options, $params = array()) {
+        if ($this->fieldExists($name) || empty($name)) {
             return false;
         }
-
+        if (!is_array($options) || empty($options)) {
+            return false;
+        }
+        
         if ($this->submitted) {
-            $var = $this->method == 'post' ? $_POST[$params['name']] : $_GET[$params['name']];
+            $var = $this->method == 'post' ? $_POST[$name] : $_GET[$name];
             $valid = $this->_validate($var, $params);
             if (!$valid) {
-                $this->invalid[] = $params['name'];
+                $this->invalid[] = $name;
             }
-            $this->values[$params['name']] = $var;
-            if (!isset($params['value'])) {
-                $params['selected'] = $this->values[$params['name']];
+            $this->values[$name] = $var;
+            $params['checked'] = array();
+            foreach ($options as $key => $option) {
+                if ($this->values[$name][$key] == $option['value']) {
+                    $params['checked'][] = $key;
+                }
             }
         }
 
-        if (!isset($params['options']) || !is_array($params['options'])) {
-            return false;
-        }
-
-        return $this->_append('radiobuttons', $params, isset($valid) ? $valid : true);
+        $this->_stack[$name] = array(
+            'type'    => 'checkboxes',
+            'name'    => $name,
+            'options' => $options,
+            'params'  => $params,
+            'valid'   => isset($valid) ? $valid : true
+        );
     }
 
     /**
      * Adds a textinput to the stack
+     * @param   string  $name    The name of the input field
+     * @param   string  $value   The value of the input field
      * @param   array   $params  The parameters of the input field
      * @return  bool
      * @access  public
      */
-    public function addTextInput(array $params) {
-        if (!isset($params['name'])) {
+    public function addTextInput($name, $value = '', $params = array()) {
+        if ($this->fieldExists($name) || empty($name)) {
             return false;
         }
-
+        
         if ($this->submitted) {
-            $var = $this->method == 'post' ? $_POST[$params['name']] : $_GET[$params['name']];
+            $var = $this->method == 'post' ? $_POST[$name] : $_GET[$name];
             $valid = $this->_validate($var, $params);
             if (!$valid) {
-                $this->invalid[] = $params['name'];
+                $this->invalid[] = $name;
             }
-            $this->values[$params['name']] = $var;
-            if (!isset($params['value'])) {
-                $params['value'] = $this->values[$params['name']];
-            }
+            $this->values[$name] = $var;
+            $value = $this->values[$name];
         }
 
-        return $this->_append('textinput', $params, isset($valid) ? $valid : true);
+        $this->_stack[$name] = array(
+            'type'   => 'textinput',
+            'name'   => $name,
+            'value'  => $value,
+            'params' => $params,
+            'valid'  => isset($valid) ? $valid : true
+        );
     }
 
     /**
      * Adds a field for uploading a file to the stack
+     * @param   string  $name    The name of the input field
      * @param   array   $params  The parameters of the input field
      * @return  bool
      * @access  public
      */
-    public function addFileInput(array $params) {
-        if (!isset($params['name'])) {
+    public function addFileInput($name, $params = array()) {
+        if ($this->fieldExists($name) || empty($name)) {
             return false;
         }
-
+        
         $this->addHidden(array(
             'name' => 'MAX_FILE_SIZE',
             'value' => (isset($params['maxFileSize']) ? $params['maxFileSize'] : 30000)
         ));
 
         if ($this->submitted) {
-            if (isset($_FILES[$params['name']])) {
-                $this->values[$params['name']] =& $_FILES[$params['name']];
-            } elseif ($params['not_empty'] == true) {
-                $this->invalid[] = $params['name'];
+            if (isset($_FILES[$name])) {
+                $this->values[$name] =& $_FILES[$name];
+            } elseif ($params['required'] == true) {
+                $this->invalid[] = $name;
                 $valid = false;
-                if (isset($options['on_error'])) {
-                    if (is_callable($options['on_error'])) {
-                        call_user_func($options['on_error']);
-                    } elseif (is_string($options['on_error'])) {
-                        displayMessage($options['message'], 'warning');
-                    }
-                }
             } else {
-                $this->values[$params['name']] = false;
+                $this->values[$name] = false;
             }
         }
 
-        return $this->_append('file', $params, isset($valid) ? $valid : true);
+        $this->_stack[$name] = array(
+            'type'   => 'file',
+            'name'   => $name,
+            'params' => $params,
+            'valid'  => isset($valid) ? $valid : true
+        );
     }
 
     /**
      * Adds a dropdown field to the stack
-     * @param   array   $params  The parameters of the input field
+     * @param   string  $name     The name of the input field
+     * @param   array   $options  An array of options in the form:
+     *                              {<value> => <caption>, ...}
+     * @param   array   $params   The parameters of the input field
      * @return  bool
      * @access  public
      */
-    public function addDropDown(array $params) {
-        if (!isset($params['name'])) {
+    public function addDropDown($name, $options, $params = array()) {
+        if ($this->fieldExists($name) || empty($name)) {
             return false;
         }
-
+        if (!is_array($options) || empty($options)) {
+            return false;
+        }
+        
         if ($this->submitted) {
-            $var = $this->method == 'post' ? $_POST[$params['name']] : $_GET[$params['name']];
+            $var = $this->method == 'post' ? $_POST[$name] : $_GET[$name];
             $valid = $this->_validate($var, $params);
             if (!$valid) {
-                $this->invalid[] = $params['name'];
+                $this->invalid[] = $name;
             }
-            $this->values[$params['name']] = $var;
-            if (!isset($params['value'])) {
-                $params['selected'] = $this->values[$params['name']];
-            }
+            $this->values[$name] = $var;
+            $params['selected'] = $this->values[$name];
         }
 
-        return $this->_append('select', $params, isset($valid) ? $valid : true);
+        $this->_stack[$name] = array(
+            'type'    => 'select',
+            'name'    => $name,
+            'options' => $options,
+            'params'  => $params,
+            'valid'   => isset($valid) ? $valid : true
+        );
     }
 
     /**
      * Adds a date select field to the stack
+     * @param   string  $name    The name of the input field
      * @param   array   $params  The parameters of the input field. Additional parameters for this type are:
      *                             - minDay      List of days starts at day n
      *                             - maxDay      List of days ends at day n
@@ -324,12 +370,11 @@ class htmlform {
      * @return  bool
      * @access  public
      */
-    public function addDateSelect(array $params) {
-        if (!isset($params['name'])) {
+    public function addDateSelect($name, $params = array()) {
+        if ($this->fieldExists($name) || empty($name)) {
             return false;
         }
-
-        // auto add param values if none are given
+        
         if (!isSet($params['minDay']) || $params['minDay'] < 1) {
             $params['minDay'] = 1;
         }
@@ -351,76 +396,82 @@ class htmlform {
 
         if ($this->submitted) {
             if ($this->method == 'post') {
-                $day = $_POST[$params['name'].'Day'];
-                $month = $_POST[$params['name'].'Month'];
-                $year = $_POST[$params['name'].'Year'];
+                $day = $_POST[$name.'Day'];
+                $month = $_POST[$name.'Month'];
+                $year = $_POST[$name.'Year'];
             } else {
-                $day = $_GET[$params['name'].'Day'];
-                $month = $_GET[$params['name'].'Month'];
-                $year = $_GET[$params['name'].'Year'];
+                $day = $_GET[$name.'Day'];
+                $month = $_GET[$name.'Month'];
+                $year = $_GET[$name.'Year'];
             }
             
-            // debugging
-            print_r($var);
-            
             $valid = true;
-            // validate year
             if ($year < $params['minYear'] || $year > $params['maxYear'] || !isset($year)) {
                 $valid = false;
             }
-            // validate month
             if ($month < $params['minMonth'] || $month > $params['maxMonth'] || !isset($month)) {
                 $valid = false;
             }
-            // validate day
             if ($day < 1 || $day > date('t', mktime(0, 0, 0, $month, 1, $year)) || !isset($day)) {
                 $valid = false;
             }
 
             if (!$valid) {
-                $this->invalid[] = $params['name'];
+                $this->invalid[] = $name;
             }
             
-            $this->values[$params['name']]['day'] = $day;
-            $this->values[$params['name']]['month'] = $month;
-            $this->values[$params['name']]['year'] = $year;
+            $this->values[$name]['day'] = $day;
+            $this->values[$name]['month'] = $month;
+            $this->values[$name]['year'] = $year;
             
             $params['day'] = $day;
             $params['month'] = $month;
             $params['year'] = $year;
         }
 
-        return $this->_append('date', $params, isset($valid) ? $valid : true);
+        $this->_stack[$name] = array(
+            'type'   => 'date',
+            'name'   => $name,
+            'params' => $params,
+            'valid'  => isset($valid) ? $valid : true
+        );
     }
 
     /**
      * Adds a textarea to the stack
+     * @param   string  $name    The name of the input field
+     * @param   string  $value   The value of the input field
      * @param   array   $params  The parameters of the input field
      * @return  bool
      * @access  public
      */
-    public function addTextArea(array $params) {
-        if (!isset($params['name'])) {
+    public function addTextArea($name, $value = '', $params = array()) {
+        if ($this->fieldExists($name) || empty($name)) {
             return false;
         }
-
+        
         if ($this->submitted) {
-            $var = $this->method == 'post' ? $_POST[$params['name']] : $_GET[$params['name']];
+            $var = $this->method == 'post' ? $_POST[$name] : $_GET[$name];
             $valid = $this->_validate($var, $params);
             if (!$valid) {
-                $this->invalid[] = $params['name'];
+                $this->invalid[] = $name;
             }
-            $this->values[$params['name']] = $var;
-            if (!isset($params['value'])) {
-                $params['value'] = $this->values[$params['name']];
-            }
+            $this->values[$name] = $var;
+            $value = $this->values[$name];
         }
 
-        return $this->_append('textarea', $params, isset($valid) ? $valid : true);
+        $this->_stack[$name] = array(
+            'type'   => 'textarea',
+            'name'   => $name,
+            'value'  => $value,
+            'params' => $params,
+            'valid'  => isset($valid) ? $valid : true
+        );
     }
 
     /**
      * Adds a captcha to the stack
+     * @param   string  $name    The name of the input field
      * @param   array   $params  The parameters of the input field. Additional parameters for this type are:
      *                             - captchaLength    The number of characters on the captcha picture
      *                             - captchaFontSize  The font size of the characters
@@ -432,14 +483,14 @@ class htmlform {
      * @return  bool
      * @access  public
      */
-    public function addCaptcha(array $params) {
-        if (!isset($params['name'])) {
+    public function addCaptcha($name, $params = array()) {
+        if ($this->fieldExists($name) || empty($name)) {
             return false;
         }
-
+        
         $captchaLength = isset($params['captchaLength']) ? $params['captchaLength'] : 5;
-        $captchaFontsize = isset($params['captchaFontSize']) ? $params['captchaFontSize'] : 18;
-        $captchaCharacters = isset($params['captchaCharList']) ? $params['captchaCharList'] : 'abcdefghijlmnpqrstuvwyzABCDEFGHIJLMNPQRSTUVWYZ123456789';
+        $captchaFontSize = isset($params['captchaFontSize']) ? $params['captchaFontSize'] : 18;
+        $captchaCharList = isset($params['captchaCharList']) ? $params['captchaCharList'] : 'abcdefghijlmnpqrstuvwyzABCDEFGHIJLMNPQRSTUVWYZ123456789';
         $imageWidth = isset($params['imageWidth']) ? $params['imageWidth'] : 170;
         $imageHeight = isset($params['imageHeight']) ? $params['imageHeight'] : 60;
         $fontsDir = isset($params['fontsDir']) ? $params['fontsDir'] : HADES_DIR_ROOT . 'files/fonts/';
@@ -461,15 +512,15 @@ class htmlform {
 
         $col3 = imageColorAllocate($img, mt_rand(170, 255), mt_rand(170, 255), mt_rand(170, 255));
         for($i = 0; $i < ($imageWidth * $imageHeight) / 150; $i++) {
-
             imageLine($img, mt_rand(0, $imageWidth), mt_rand(0, $imageHeight), mt_rand(0, $imageWidth), mt_rand(0, $imageHeight), $col3);
         }
 
         $captchaText = '';
         $x = 10;
 
+        $captchaCharListEnd = strlen($captchaCharList)-1;
         for($i = 0; $i < $captchaLength; $i++) {
-            $chr = $captchaCharacters[rand(0, strlen($captchaCharacters) - 1)];
+            $chr = $captchaCharList[mt_rand(0, $captchaCharListEnd)];
 
             $captchaText .= $chr;
 
@@ -478,14 +529,14 @@ class htmlform {
             $y = 25 + mt_rand(0, 20);
             $angle = mt_rand(-30, 30);
 
-            imageTTFText($img, $captchaFontsize, $angle, $x, $y, $col4, $font, $chr);
+            imageTTFText($img, $captchaFontSize, $angle, $x, $y, $col4, $font, $chr);
 
-            $dim = imageTTFBbox($captchaFontsize, $angle, $font, $chr);
+            $dim = imageTTFBbox($captchaFontSize, $angle, $font, $chr);
             $x += $dim[4] + abs($dim[6]) + 10;
         }
 
         $this->addHidden(array(
-            'name' => $params['name'].'_hash',
+            'name' => $name.'_hash',
             'value' => hash('sha256', $captchaText)
         ));
 
@@ -497,17 +548,22 @@ class htmlform {
 
         if ($this->submitted) {
             $valid = false;
-            $var = $this->method == 'post' ? $_POST[$params['name']] : $_GET[$params['name']];
-            $hash = $this->method == 'post' ? $_POST[$params['name'].'_hash'] : $_GET[$params['name'].'_hash'];
+            $var = $this->method == 'post' ? $_POST[$name] : $_GET[$name];
+            $hash = $this->method == 'post' ? $_POST[$name.'_hash'] : $_GET[$name.'_hash'];
             if (hash('sha256', $var) == $hash) {
                 $valid = true;
             }
             if (!$params['valid'] || !$valid) {
-                $this->invalid[] = $params['name'];
+                $this->invalid[] = $name;
             }
         }
 
-        return $this->_append('captcha', $params, isset($valid) ? $valid : true);
+        $this->_stack[$name] = array(
+            'type'   => 'captcha',
+            'name'   => $name,
+            'params' => $params,
+            'valid'  => isset($valid) ? $valid : true
+        );
     }
 
     /**
@@ -516,7 +572,7 @@ class htmlform {
      * @return  bool
      * @access  private
      */
-    private function _checkExists($name) {
+    public function fieldExists($name) {
         if (isset($this->_stack[$name])) {
             return true;
         }
@@ -540,12 +596,12 @@ class htmlform {
      * @return  bool
      * @access  private
      */
-    private function _validate(&$var, $options = array()) {
+    private function _validate(&$var, $options) {
         $valGood = true;
         if (isset($options['equal']) && $var != $options['equal']) {
             $valGood = false;
         } else {
-            if ($options['required'] && $var == '') {
+            if ($options['required'] && empty($var)) {
                 $valGood = false;
             }
             if (isset($options['notEqual']) && $var == $options['notEqual']) {
@@ -579,27 +635,6 @@ class htmlform {
             }
         }
         return $valGood;
-    }
-
-    /**
-     * Appends a field to the stack
-     * @param   string  $type    The type of input field
-     * @param   array   $params  All the parameters
-     * @param   bool    $valid   Mark the input as valid?
-     * @return  void
-     * @access  private
-     */
-    private function _append($type, array $params, $valid = true) {
-        $name = $params['name'];
-        if ($this->_checkExists($name)) {
-            return false;
-        }
-        $this->_stack[$name] = array(
-            'type' => $type,
-            'name' => $name,
-            'params' => $params,
-            'valid' => $valid
-        );
     }
 
 }

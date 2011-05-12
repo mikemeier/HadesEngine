@@ -66,24 +66,24 @@
 <?php  elseif ($input['type'] == 'date'): ?>
     <div class="field<?php if (!$input['valid']): ?> error<?php endif; ?>">
         <?php if ($input['params']['title']): ?><label><?php echo $input['params']['title']; if ($input['params']['required'] || $input['params']['minLength'] || $input['params']['minRange']): ?> <em class="required">*</em><?php endif; ?></label><?php endif; ?>
-<?php   if(isset($input['params']['day'])): ?>
+<?php   if(isset($input['day'])): ?>
         <select name="<?php echo $input['name'] ?>Day">
             <?php for($i = $input['params']['minDay']; $i <= $input['params']['maxDay']; $i++): ?>
-            <option value="<?php echo $i ?>" <?php if($i == $input['params']['day']): ?>selected="selected"<?php endif; ?>><?php echo $i ?></option>
+            <option value="<?php echo $i ?>" <?php if($i == $input['day']): ?>selected="selected"<?php endif; ?>><?php echo $i ?></option>
             <?php endfor; ?>
         </select>
 <?php   endif; ?>
-<?php   if(isset($input['params']['month'])): ?>
+<?php   if(isset($input['month'])): ?>
         <select name="<?php echo $input['name'] ?>Month">
             <?php for($i = $input['params']['minMonth']; $i <= $input['params']['maxMonth']; $i++): ?>
-            <option value="<?php echo $i ?>" <?php if($i == $input['params']['month']): ?>selected="selected"<?php endif; ?>><?php echo $i ?></option>
+            <option value="<?php echo $i ?>" <?php if($i == $input['month']): ?>selected="selected"<?php endif; ?>><?php echo $i ?></option>
             <?php endfor; ?>
         </select>
 <?php   endif; ?>
-<?php   if(isset($input['params']['year'])): ?>
+<?php   if(isset($input['year'])): ?>
         <select name="<?php echo $input['name'] ?>Day">
             <?php for($i = $input['params']['minYear']; $i <= $input['params']['maxYear']; $i++): ?>
-            <option value="<?php echo $i ?>" <?php if($i == $input['params']['year']): ?>selected="selected"<?php endif; ?>><?php echo $i ?></option>
+            <option value="<?php echo $i ?>" <?php if($i == $input['year']): ?>selected="selected"<?php endif; ?>><?php echo $i ?></option>
             <?php endfor; ?>
         </select>
 <?php   endif; ?>
@@ -103,7 +103,7 @@
     <div class="field<?php if (!$input['valid']): ?> error<?php endif; ?>">
         <?php if ($input['params']['title']): ?><label for="<?php echo $input['name'] ?>"><?php echo $input['params']['title']; if ($input['params']['required'] || $input['params']['minLength'] || $input['params']['minRange']): ?> <em class="required">*</em><?php endif; ?></label><?php endif; ?>
         <div class="captcha">
-          <img src="data:image/jpeg;base64,<?php echo base64_encode($input['params']['captcha'] ?>" alt="" style="display: block;" />
+          <img src="data:image/jpeg;base64,<?php echo base64_encode($input['captcha'] ?>" alt="" style="display: block;" />
           <input type="text" name="<?php echo $input['name'] ?>" id="<?php echo $input['name'] ?>"<?php if ($input['params']['size']): ?> size="<?php echo $input['params']['size'] ?>"<?php endif; if ($input['params']['maxlength']): ?> maxlength="<?php echo $input['params']['maxlength'] ?>"<?php endif; if ($input['params']['class']): ?> class="<?php echo $input['params']['class'] ?>"<?php endif; if ($input['params']['style']): ?> style="<?php echo $input['params']['style'] ?>"<?php endif; ?> /><?php if ($input['params']['note']): ?><a class="help" rel="tooltip" href="javascript:;" title="<?php echo $input['params']['note'] ?>"></a><?php endif; ?>
         </div>
         <?php if ($input['params']['description']): ?><span class="description"><?php echo $input['params']['description'] ?></span><?php endif; ?>

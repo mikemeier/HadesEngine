@@ -140,6 +140,8 @@ class htmlform {
             'params' => $params,
             'valid'  => isset($valid) ? $valid : true
         );
+        
+        return true;
     }
 
     /**
@@ -176,6 +178,8 @@ class htmlform {
             'params'  => $params,
             'valid'   => isset($valid) ? $valid : true
         );
+        
+        return true;
     }
 
     /**
@@ -210,6 +214,8 @@ class htmlform {
             'params' => $params,
             'valid'  => isset($valid) ? $valid : true
         );
+        
+        return true;
     }
 
     /**
@@ -251,6 +257,8 @@ class htmlform {
             'params'  => $params,
             'valid'   => isset($valid) ? $valid : true
         );
+        
+        return true;
     }
 
     /**
@@ -283,6 +291,8 @@ class htmlform {
             'params' => $params,
             'valid'  => isset($valid) ? $valid : true
         );
+        
+        return true;
     }
 
     /**
@@ -319,6 +329,8 @@ class htmlform {
             'params' => $params,
             'valid'  => isset($valid) ? $valid : true
         );
+        
+        return true;
     }
 
     /**
@@ -355,11 +367,14 @@ class htmlform {
             'params'  => $params,
             'valid'   => isset($valid) ? $valid : true
         );
+        
+        return true;
     }
 
     /**
      * Adds a date select field to the stack
-     * @param   string  $name    The name of the input field
+     * @param   string  $name    The name of the input fields
+     * @param   int     $value   The currently selected date as a timestamp
      * @param   array   $params  The parameters of the input field. Additional parameters for this type are:
      *                             - minDay      List of days starts at day n
      *                             - maxDay      List of days ends at day n
@@ -370,7 +385,7 @@ class htmlform {
      * @return  bool
      * @access  public
      */
-    public function addDateSelect($name, $params = array()) {
+    public function addDateSelect($name, $value = null, $params = array()) {
         if ($this->fieldExists($name) || empty($name)) {
             return false;
         }
@@ -423,18 +438,26 @@ class htmlform {
             $this->values[$name]['day'] = $day;
             $this->values[$name]['month'] = $month;
             $this->values[$name]['year'] = $year;
-            
-            $params['day'] = $day;
-            $params['month'] = $month;
-            $params['year'] = $year;
+        } else {
+            if (!isSet($value)) {
+                $value = time();
+            }
+            $day = date('d', $value);
+            $month = date('m', $value);
+            $year = date('Y', $value);
         }
 
         $this->_stack[$name] = array(
             'type'   => 'date',
             'name'   => $name,
+            'day'    => $day;
+            'month'  => $month;
+            'year'   => $year;
             'params' => $params,
             'valid'  => isset($valid) ? $valid : true
         );
+        
+        return true;
     }
 
     /**
@@ -467,6 +490,8 @@ class htmlform {
             'params' => $params,
             'valid'  => isset($valid) ? $valid : true
         );
+        
+        return true;
     }
 
     /**
@@ -542,7 +567,7 @@ class htmlform {
 
         ob_start();
         imageJpeg($img, null, 100);
-        $params['captcha'] = ob_get_clean();
+        $captcha = ob_get_clean();
 
         imageDestroy($img);
 
@@ -559,11 +584,14 @@ class htmlform {
         }
 
         $this->_stack[$name] = array(
-            'type'   => 'captcha',
-            'name'   => $name,
-            'params' => $params,
-            'valid'  => isset($valid) ? $valid : true
+            'type'    => 'captcha',
+            'name'    => $name,
+            'captcha' => $captcha,
+            'params'  => $params,
+            'valid'   => isset($valid) ? $valid : true
         );
+        
+        return true;
     }
 
     /**

@@ -30,22 +30,23 @@ class lang {
      */
     public static function init($lang) {
         self::$_lang = $lang;
-        // check if a cache file exists
-        $cacheFile = 'cache/lang_'.$lang.'.ini.php';
-        if (core::setting('core', 'lang_cache') && file_exists($cacheFile)) {
+        // use the cache?
+        $cache = new cache('lang-'.self::$_lang);
+        if (core::setting('core', 'lang_cache') && $cache->exists) {
             // load all strings from the cache file
-            self::$_strings = parse_ini_file($cacheFile);
+            self::$_strings = $cache->read();
         } else {
             // load all strings from the database
             $sql = 'SELECT s.string, s.translated FROM #PREFIX#lang_strings s, #PREFIX#lang_packs p'
                  . ' WHERE p.id = s.pack AND p.isocode = {0}';
             $result = core::$db->query($sql, array($lang));
-            foreach (core::$db->fetchAll($result) as $entry) {
+            while ($entry = core::$db->fetchAssoc($result)) {
                 self::$_strings[$entry['string']] = $entry['translated'];
             }
             // write to cache if enabled
-            if (core::setting('core', 'lang_cache'))
-                self::writeCache();
+            if (core::setting('core', 'lang_cache')) {
+                $cache->store(self::$_strings);
+            }
         }
     }
 
@@ -70,16 +71,6 @@ class lang {
             }
         }
         return $translated;
-    }
-
-    /**
-     * Writes all language strings to a cache file
-     * @return  bool
-     * @access  public
-     * @static
-     */
-    public static function writeCache() {
-        return utils::writeArrayToIni('cache/lang_'.self::$_lang.'.ini.php', self::$_strings);
     }
 
 }

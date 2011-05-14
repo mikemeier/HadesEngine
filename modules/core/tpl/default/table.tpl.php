@@ -1,5 +1,5 @@
 <table class="fancy">
-	<tr>
+    <tr>
 <?php if ($checkList): ?>
         <th><!-- check all --></th>
 <?php endif; ?>
@@ -11,9 +11,9 @@
 <?php endif; ?>
     </tr>
 <?php foreach ($rows as $index => $row): ?>
-	<tr class="<?php echo $index % 2 == 0 ? 'odd' : 'even' ?>">
+    <tr class="<?php echo $index % 2 == 0 ? 'odd' : 'even' ?>">
 <?php  if ($checkList): ?>
-	    <td style="text-align:center;"><input type="checkbox" name="<?php echo 'check['.$row[$mainKey].']' ?>" id="<?php echo 'check-'.$row[$mainKey] ?>" /></td>
+        <td style="text-align:center;"><input type="checkbox" name="<?php echo 'check['.$row[$mainKey].']' ?>" id="<?php echo 'check-'.$row[$mainKey] ?>" /></td>
 <?php  endif; ?>
 <?php  foreach ($columns as $key => $cell): ?>
         <td<?php if ($cell['class']): ?> class="<?php echo $cell['class'] ?>"<?php endif; if ($cell['style']): ?> style="<?php echo $cell['style'] ?>"<?php endif; ?>>
@@ -31,11 +31,11 @@
         </td>
 <?php  endforeach; ?>
 <?php  if ($actions): ?>
-	    <td style="text-align:center;">
+        <td style="text-align:center;">
 <?php   foreach ($actions as $action): ?>
-		    <a href="<?php echo str_replace('*', $row[$mainKey], $action['link']) ?>"><?php if (isSet($action['icon'])): ?><img src="<?php echo str_replace('*', $row[$mainKey], $action['icon']) ?>" alt="<?php echo $action['caption'] ?>" title="<?php echo $action['caption'] ?>" /><?php else: echo $action['caption']; endif; ?></a>
+            <a href="<?php echo str_replace('*', $row[$mainKey], $action['link']) ?>"><?php if (isSet($action['icon'])): ?><img src="<?php echo str_replace('*', $row[$mainKey], $action['icon']) ?>" alt="<?php echo $action['caption'] ?>" title="<?php echo $action['caption'] ?>" /><?php else: echo $action['caption']; endif; ?></a>
 <?php   endforeach; ?>
-	    </td>
+        </td>
 <?php  endif; ?>
     </tr>
 <?php endforeach; ?>

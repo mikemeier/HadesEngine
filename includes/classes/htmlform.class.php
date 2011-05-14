@@ -450,9 +450,9 @@ class htmlform {
         $this->_stack[$name] = array(
             'type'   => 'date',
             'name'   => $name,
-            'day'    => $day;
-            'month'  => $month;
-            'year'   => $year;
+            'day'    => $day,
+            'month'  => $month,
+            'year'   => $year,
             'params' => $params,
             'valid'  => isset($valid) ? $valid : true
         );

@@ -1,11 +1,11 @@
             </div>
         </div>
-        <div class="footer">
+        <div id="footer">
             <span class="left">
-                Powered by <a href="http://github.com/HadesEngine">HadesEngine</a>
+                Powered by <a href="http://github.com/HadesEngine/HadesEngine">HadesEngine</a>
             </span>
             <span class="right">
-                <a href="?p=page/pages/url/imprint">Imprint</a>
+                <a href="?p=pages/imprint">Imprint</a>
             </span>
         </div>
     </body>

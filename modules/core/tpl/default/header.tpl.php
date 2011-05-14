@@ -4,15 +4,15 @@
     </head>
     <?php tpl::printJS() ?>
     <?php tpl::printCSS() ?>
-    <style type="text/css">
-        @import url('themes/default/style.css');
+    <link rel="stylesheet" href="themes/default/style.css" type="text/css">
+        @import url('');
     </style>
     <body>
-        <div class="wrapper">
-            <div class="header">
+        <div id="wrapper">
+            <div id="header">
                 <div class="title">
                     <?php echo utils::setting('core', 'site_name') ?>
                 </div>
             </div>
-            <div class="content">
-                
+            <div id="content">
+

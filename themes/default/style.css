@@ -6,57 +6,198 @@
 */
 
 body {
-    font-family: Verdana, "Verdana", Arial;
-    margin: 0;
-    padding: 0;
-    background-color: #cccfff;
+font-family: Verdana, "Verdana", Arial;
+margin: 0;
+padding: 0;
+background-color: #cccfff;
 }
 
-.wrapper {
-    background-color: #fff;
-    width: 800px;
-    margin: 0 auto;
-    border: 1px solid #ccc;
-    border-top: none;
+#wrapper {
+background-color: #fff;
+width: 800px;
+margin: 0 auto;
+border: 1px solid #ccc;
+border-top: none;
 }
 
-.header {
-    padding: 20px;
-    height: 40px;
-    border-bottom: 5px solid #ccc;
+#header {
+padding: 20px;
+height: 40px;
+border-bottom: 5px solid #ccc;
 }
 
-.header .title  {
-    margin-top: 5px;
-    font-size: 20px;
-    font-weight: bold;
+#header .title  {
+margin-top: 5px;
+font-size: 20px;
+font-weight: bold;
 }
 
-.content {
-    padding: 20px;
-    text-align: justify;
+#content {
+padding: 20px;
+text-align: justify;
 }
 
-.footer {
-    width: 800px;
-    margin: 0 auto;
-    padding: 10px 0 10px 0;
-    font-size: 10px;
-    color: #666;
+#footer {
+width: 800px;
+margin: 0 auto;
+padding: 10px 0 10px 0;
+font-size: 10px;
+color: #666;
 }
 
-.footer a {
-    color: #666;
+#footer a {
+color: #666;
 }
 
 .left {
-    float: left;
+float: left;
 }
 
 .right {
-    float: right;
+float: right;
 }
 
 .clear {
-    clear: both;
+clear: both;
+}
+
+table.fancy {
+background:#fff;
+width:100%;
+border:1px solid #35a8c8;
+margin:0;
+}
+
+table.fancy tr th {
+background:#36abcc;
+color:#fff;
+font-weight:bold;
+padding:5px;
+text-align:center;
+}
+
+table.fancy tr th.sub {
+background:#a3cdd9;
+color:#fff;
+font-weight:bold;
+padding:5px 5px 5px 8px;
+text-align:left;
+}
+
+table.fancy tr td {
+background:#eee;
+padding:5px 5px 5px 8px;
+}
+
+table.fancy tr.even td {
+background:#ddd;
+}
+
+form.fancy label {
+display:block;
+float:left;
+line-height:1.9em;
+margin-right:10px;
+padding-bottom:.5em;
+padding-right:10px;
+position:relative;
+text-align:right;
+width:190px;
+}
+
+form.fancy label em.required {
+color:#C00;
+font-style:normal;
+position:absolute;
+right:0;
+}
+
+form.fancy .field {
+margin:0 0 .8em;
+position:relative;
+}
+
+form.fancy .field input:focus,form.fancy .field textarea:focus,form.fancy .field select:focus {
+outline:none;
+}
+
+form.fancy .field.error input,form.fancy .field.error textarea,form.fancy .field.error select {
+border-color:#c00 !important;
+}
+
+form.fancy .field input,form.fancy .field > textarea {
+border:1px solid #BBB;
+padding:3px;
+}
+
+form.fancy .field select {
+border:1px solid #BBB;
+padding:1px;
+}
+
+form.fancy .controlset .controlset-fields, form.fancy .editor, form.fancy .tagger {
+margin-left:195px;
+}
+
+form.fancy .controlset .controlset-fields label {
+display:inline;
+float:none;
+font-weight:normal;
+padding-left:5px;
+text-shadow:none;
+width:auto;
+}
+
+form.fancy .controlset .controlset-fields input {
+border:none !important;
+display:inline !important;
+float:none !important;
+}
+
+form.fancy .description {
+display:block;
+color:#999;
+margin-left:218px;
+margin-top:.25em;
+font-size:.9em;
+}
+
+form.fancy .error > .controlset-fields {
+color:#C00;
+}
+
+form.fancy .error > .error-text {
+display:block;
+color:#C00;
+margin-left:218px;
+margin-top:.25em;
+font-size:.9em;
+}
+
+form.fancy a.help {
+background:url(images/info.png) no-repeat 0 0;
+color:#000;
+display:inline-block;
+font-size:0;
+height:16px;
+left:8px;
+outline:none;
+position:relative;
+text-decoration:none;
+top:3px;
+width:16px;
+z-index:24;
+}
+
+form.fancy .buttons {
+margin:15px 0 0 210px;
+}
+
+form.fancy .captcha {
+display:inline-block;
+}
+
+form.fancy .captcha > img {
+display:block;
+margin-bottom:8px;
 }

@@ -11,7 +11,7 @@
         <div id="wrapper">
             <div id="header">
                 <div class="title">
-                    <?php echo utils::setting('core', 'site_name') ?>
+                    <?php echo core::setting('core', 'site_name') ?>
                 </div>
             </div>
             <div id="content">

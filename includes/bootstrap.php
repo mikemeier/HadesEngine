@@ -9,7 +9,7 @@
 session_start();
 
 // include required files
-require_once 'classAutoLoader.php';
+require_once 'autoloader.php';
 require_once 'functions.php';
 
 // load settings

@@ -1,13 +1,13 @@
 <table class="fancy">
 	<tr>
-<?php foreach ($columns as $col): ?>
 <?php if ($checkList): ?>
-	    <th><!-- check all --></th>
+        <th><!-- check all --></th>
 <?php endif; ?>
+<?php foreach ($columns as $col): ?>
         <th<?php if ($col['width']): ?> style="width:<?php echo $col['width'] ?>;"<?php endif; ?>><?php echo isSet($col['heading']) ? $col['heading'] : '&nbsp;' ?></th>
 <?php endforeach; ?>
 <?php if ($actions): ?>
-	    <th><?php t('Action') ?></th>
+        <th><?php t('Action') ?></th>
 <?php endif; ?>
     </tr>
 <?php foreach ($rows as $index => $row): ?>

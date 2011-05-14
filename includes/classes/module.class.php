@@ -31,29 +31,34 @@ class module {
      */
     public static function init() {
         // start hook system
-        if(core::setting('core', 'module_hook_cache') == true) {
-
+        $hookCache = new cache('hooks');
+        if (core::setting('core', 'module_hook_cache') && $hookCache->exists) {
+            self::$hooks = $hookCache->read();
         } else {
             $moduleDir = scandir('modules/');
-            unset($moduleDir[0]);
-            unset($moduleDir[1]);
-            foreach($moduleDir as $moduleName) {
-                $file = 'modules/'.$moduleName.'/'.$moduleName.'.php';
-                include $file;
-                // make an object
-                $theModule = new $moduleName;
-                // get methods as hooks
-                $hooks = get_class_methods($theModule);
-                // go through all hooks
-                foreach($hooks as $hookName) {
-                    // load only hooks without underscore as first char
-                    if(substr($hookName, 0, 5) == 'hook_') {
-                        echo 1;
-                        // put to plugins array
-                        self::$hooks[$hookName][] = $moduleName;
+            foreach ($moduleDir as $moduleName) {
+                // skip dot dirs
+                if ($moduleName[0] == '.') {
+                    continue;
+                }
+                // include the module class
+                include_once 'modules/'.$moduleName.'/'.$moduleName.'.php';
+                // create a module object
+                $module = new $moduleName;
+                // get all the methods of the module
+                $moduleMethods = get_class_methods($module);
+                // walk through all methods and collect the hooks
+                foreach ($moduleMethods as $methodName) {
+                    // is the method a hook?
+                    if (substr($methodName, 0, 5) == 'hook_') {
+                        // yes, put it into the hooks array
+                        self::$hooks[$methodName][] = $moduleName;
                     }
                 }
-                unset($theModule);
+                unset($module);
+            }
+            if (core::setting('core', 'module_hook_cache')) {
+                $hookCache->store(self::$hooks);
             }
         }
 

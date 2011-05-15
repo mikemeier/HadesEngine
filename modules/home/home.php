@@ -1,5 +1,5 @@
 <?php
-class home {
+class module_home {
 
     public static function action_main() {
         // set title of the page in front of the site name

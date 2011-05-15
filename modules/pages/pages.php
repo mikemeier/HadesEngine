@@ -4,7 +4,7 @@
  *
  * @author  Martin Lantzsch <martin@linux-doku.de>
  */
-class pages {
+class module_pages {
 
     /**
      * main action

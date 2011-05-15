@@ -1,4 +1,4 @@
 <?php
-class core {
+class module_core {
     // empty
 }

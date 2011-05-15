@@ -33,30 +33,36 @@ class module {
         // start hook system
         $hookCache = new cache('hooks');
         if (core::setting('core', 'module_hook_cache') && $hookCache->exists) {
+            // load hooks from cache
             self::$hooks = $hookCache->read();
         } else {
+            // scan moddule dir
             $moduleDir = scandir('modules/');
             foreach ($moduleDir as $moduleName) {
                 // skip dot dirs
                 if ($moduleName[0] == '.') {
                     continue;
                 }
+                
                 // include the module class
                 include_once 'modules/'.$moduleName.'/'.$moduleName.'.php';
+                
                 // create a module object
-                $module = new $moduleName;
-                // get all the methods of the module
-                $moduleMethods = get_class_methods($module);
-                // walk through all methods and collect the hooks
+                $moduleObject = new $moduleName;
+                
+                // get all the methods of the module and walk through them to collect the hooks
+                $moduleMethods = get_class_methods($moduleObject);
                 foreach ($moduleMethods as $methodName) {
-                    // is the method a hook?
                     if (substr($methodName, 0, 5) == 'hook_') {
-                        // yes, put it into the hooks array
                         self::$hooks[$methodName][] = $moduleName;
                     }
                 }
-                unset($module);
+                
+                // unset module object
+                unset($moduleObject);
             }
+            
+            // store result to cache if enabled
             if (core::setting('core', 'module_hook_cache')) {
                 $hookCache->store(self::$hooks);
             }
@@ -64,14 +70,14 @@ class module {
 
         // get page from params
         $module = filter::string(url::param('module'));
-        if(!$module)
+        if (!$module)
             $module = core::setting('core', 'frontpage');
 
         self::$module = $module;
 
         // get action from params
         $action = filter::string(url::param('action'));
-        if(!$action)
+        if (!$action)
             $action = 'main';
 
         self::loadModule($module, $action);
@@ -86,30 +92,28 @@ class module {
      * @static
      */
     public static function loadModule($module, $action = 'main') {
-        // module main class
-        $moduleFile = "modules/{$module}/{$module}.php";
-
         // load module if exists
-        if(self::exists($module)) {
-            require $moduleFile;
+        if (self::exists($module)) {
+            require_once 'modules/'.$module.'/'.$module.'.php';
+            $moduleClass = 'module_'.$module;
         } else {
-            throw new Exception("bootstrap: Failed loading module '{$module}'");
+            throw new Exception('module: Failed loading module \''.$module.'\'');
         }
-
+        
         // check if action method exists
-        if(!method_exists($module, $action))
+        if (!method_exists($moduleClass, $action))
             $action = 'main';
-
+            
         // before action
-        if(method_exists($module, 'before'))
-            call_user_func(array($module, 'before'), $action);
-
+        if (method_exists($moduleClass, 'before'))
+            call_user_func(array($moduleClass, 'before'), $action);
+            
         // call function
-        call_user_func_array(array($module, 'action_'.$action), url::paramsAsArray());
-
+        call_user_func_array(array($moduleClass, 'action_'.$action), url::paramsAsArray());
+        
         // after action
-        if(method_exists($module, 'after'))
-            call_user_func(array($module, 'after'), $action);
+        if (method_exists($moduleClass, 'after'))
+            call_user_func(array($moduleClass, 'after'), $action);
     }
 
     /**
@@ -118,23 +122,22 @@ class module {
      * @param  string  $hook    name of the hook
      * @param  array   $params  params as array
      */
-    public static function callHook($name, $params=false) {
+    public static function callHook($name, $params = false) {
         // look if hooks existing
-        if(count(self::$hooks[$name]) != 0) {
+        if (count(self::$hooks[$name]) != 0) {
             // go throug all plugins
-            foreach(self::$hooks[$name] as $moduleName) {
-                // include module class if
-                if(core::setting('core', 'module_hook_cache') == true) {
-                    include "modules/{$moduleName}/{$moduleName}.php";
-                }
-
+            foreach (self::$hooks[$name] as $moduleName) {
+                // include module class
+                include_once 'modules/'.$moduleName.'/'.$moduleName.'.php';
+                $moduleClass = 'module_'.$moduleName;
+                
                 // check if params are given
-                if(!is_array($params)) {
+                if (!is_array($params)) {
                     // call plugin without params
-                    call_user_func(array($moduleName, 'hook_'.$hook));
+                    return call_user_func(array($moduleClass, 'hook_'.$name));
                 } else {
                     // call plugin with params
-                    call_user_func_array(array($moduleName, 'hook_'.$hook), $params);
+                    return call_user_func_array(array($moduleClass, 'hook_'.$name), $params);
                 }
             }
         }
@@ -148,10 +151,7 @@ class module {
      * @static
      */
     public static function exists($module) {
-        // module main class
-        $moduleFile = "modules/{$module}/{$module}.php";
-
-        // check if exists
+        $moduleFile = 'modules/'.$module.'/'.$module.'.php';
         return file_exists($moduleFile);
     }
 

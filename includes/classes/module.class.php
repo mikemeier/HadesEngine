@@ -67,20 +67,6 @@ class module {
                 $hookCache->store(self::$hooks);
             }
         }
-
-        // get page from params
-        $module = filter::string(url::param('module'));
-        if (!$module)
-            $module = core::setting('core', 'frontpage');
-
-        self::$module = $module;
-
-        // get action from params
-        $action = filter::string(url::param('action'));
-        if (!$action)
-            $action = 'main';
-
-        self::loadModule($module, $action);
     }
 
     /**
